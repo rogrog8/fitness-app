@@ -167,7 +167,7 @@ h2 {
     min-height: 150px;
     
     /* Tambahkan gambar sebagai latar belakang */
-    background-image: url('../images/fitnes-btn.jpg');
+    background-image: url('images/fitnes-btn.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -230,7 +230,7 @@ h2 {
     min-height: 150px;
 
     /* Tambahkan gambar sebagai latar belakang */
-    background-image: url('../images/calculator.jpg');
+    background-image: url('images/calculator.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -296,7 +296,7 @@ h2 {
     min-height: 150px;
 
     /* Tambahkan gambar sebagai latar belakang */
-    background-image: url('../images/food.jpg'); /* <-- Sesuaikan nama file */
+    background-image: url('images/food.jpg'); /* <-- Sesuaikan nama file */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
