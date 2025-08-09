@@ -1,6 +1,6 @@
-// js/ui.js
 export class UI {
     constructor() {
+        // Pemilihan semua elemen DOM
         this.pages = document.querySelectorAll('.page');
         this.mainMenu = document.querySelector('.main-menu');
         this.backButtons = document.querySelectorAll('.back-btn');
@@ -44,10 +44,16 @@ export class UI {
                 exerciseData.push(item);
             }
         });
+        
+        // ==========================================================
+        // PERBAIKAN LOGIKA UTAMA DI SINI
+        // Target Bertambah jika Makan, Berkurang jika Olahraga
+        // ==========================================================
+        const remaining = userProfile.dailyGoal + totalCaloriesIn - totalCaloriesOut;
+
         this.calorieGoalEl.textContent = Math.round(userProfile.dailyGoal);
         this.caloriesInEl.textContent = Math.round(totalCaloriesIn);
         this.caloriesOutEl.textContent = Math.round(totalCaloriesOut);
-        const remaining = userProfile.dailyGoal - totalCaloriesIn + totalCaloriesOut;
         this.caloriesRemainingEl.textContent = Math.round(remaining);
         
         if (todayData.length > 0) {
@@ -77,13 +83,18 @@ export class UI {
             case 'food':
                 icon = '🍎';
                 detailsHTML = `Serving: ${item.serving}`;
-                calorieDisplay = `<span>-${Math.round(item.calories)} kcal</span>`;
+                calorieDisplay = `<span>+${Math.round(item.calories)} kcal</span>`; // Makan menambah target
                 break;
-            default:
+            case 'stress':
+                 // Tidak menampilkan kalori untuk stres
+                icon = '🧘';
+                detailsHTML = `Stress level recorded: ${item.level}`;
+                break;
+            default: // Olahraga
                 icon = '💪';
                 detailsHTML = `Amount: ${item.amount.toFixed(item.type === 'lari' ? 2 : 0)} ${this.getUnit(item.type)}`;
                 if (item.duration) detailsHTML += ` &middot; Time: ${this.formatTime(item.duration)}`;
-                calorieDisplay = `<span style="color: var(--success);">+${Math.round(item.calories)} kcal</span>`;
+                calorieDisplay = `<span style="color: var(--danger);">${-Math.round(item.calories)} kcal</span>`; // Olahraga mengurangi target
                 break;
         }
         historyItem.innerHTML = `<div class="history-item-details-container"><div class="history-item-header"><span style="text-transform: capitalize;">${icon} ${item.name || item.type.replace('-', ' ')}</span>${calorieDisplay}</div><div class="history-item-details">${detailsHTML}</div></div><button class="delete-history-btn" data-id="${item.id}" title="Delete this entry">&times;</button>`;
@@ -91,34 +102,39 @@ export class UI {
     }
 
     renderFoodList(foods, title = null) {
-        this.foodListLocalEl.innerHTML = '';
-        if (!foods || foods.length === 0) return;
-
-        if (title) {
-            this.foodListLocalEl.innerHTML = `<h3 class="results-heading">${title}</h3>`;
-        }
-        foods.forEach(food => {
-            const foodItem = document.createElement('div');
-            foodItem.className = 'food-item';
-            foodItem.innerHTML = `<div class="food-item-info"><strong style="text-transform: capitalize;">${food.name}</strong><span>${Math.round(food.calories)} kcal per ${food.serving}</span></div><button class="add-food-btn" data-food-details='${JSON.stringify(food)}'>+</button>`;
-            this.foodListLocalEl.appendChild(foodItem);
-        });
-    }
-    
-    // --- FUNGSI BARU YANG SEBELUMNYA HILANG ---
-    renderApiFoodList(foods) {
-        this.foodListApiEl.innerHTML = '';
+        const container = title ? this.foodListLocalEl : this.foodListApiEl;
+        container.innerHTML = '';
         if (!foods || foods.length === 0) {
-            this.foodListApiEl.innerHTML = `<p style="text-align: center; color: var(--text-light);">No online results found.</p>`;
+            if (title === null) {
+                container.innerHTML = `<p style="text-align: center; color: var(--text-light);">No online results found.</p>`;
+            }
             return;
         }
 
-        this.foodListApiEl.innerHTML = `<h3 class="results-heading">Online Results</h3>`;
+        if (title) {
+            container.innerHTML = `<h3 class="results-heading">${title}</h3>`;
+        }
         foods.forEach(food => {
             const foodItem = document.createElement('div');
             foodItem.className = 'food-item';
             foodItem.innerHTML = `<div class="food-item-info"><strong style="text-transform: capitalize;">${food.name}</strong><span>${Math.round(food.calories)} kcal per ${food.serving}</span></div><button class="add-food-btn" data-food-details='${JSON.stringify(food)}'>+</button>`;
-            this.foodListApiEl.appendChild(foodItem);
+            container.appendChild(foodItem);
+        });
+    }
+
+    renderApiFoodList(foods) {
+        const container = this.foodListApiEl;
+        container.innerHTML = '';
+        if (!foods || foods.length === 0) {
+            container.innerHTML = `<p style="text-align: center; color: var(--text-light);">No online results found.</p>`;
+            return;
+        }
+        container.innerHTML = `<h3 class="results-heading">Online Results</h3>`;
+        foods.forEach(food => {
+            const foodItem = document.createElement('div');
+            foodItem.className = 'food-item';
+            foodItem.innerHTML = `<div class="food-item-info"><strong style="text-transform: capitalize;">${food.name}</strong><span>${Math.round(food.calories)} kcal per ${food.serving}</span></div><button class="add-food-btn" data-food-details='${JSON.stringify(food)}'>+</button>`;
+            container.appendChild(foodItem);
         });
     }
 
