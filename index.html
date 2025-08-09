@@ -3,38 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyFitDiary | All-in-One Health Hub</title>
+    <title>GymGenie | All-in-One Health Hub</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#007bff"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="dark-theme">
     <div class="glass-container">
         <header class="app-header">
-            <h1><span class="icon">💪</span> MyFitDiary</h1>
+            <h1></span>GymGenie</h1>
             <div class="date-display" id="currentDate"></div>
         </header>
 
         <main class="content">
             <div id="page-home" class="page active">
                 <div class="main-menu">
-                    <button class="menu-card featured" data-page="page-workout">
-                        <span class="icon">💪</span>
+                    <button class="menu-card featured glowing-btn" data-page="page-workout">
                         <div class="menu-card-text">
-                            <strong>Fitness App</strong>
+                            <strong>Genie Fitness</strong>
                             <span>Track your workouts &amp; calories</span>
                         </div>
                     </button>
                     <div class="secondary-menu">
-                        <button class="menu-card" data-page="page-calculator">
-                            <span class="icon">📊</span>
-                            <div class="menu-card-text"><strong>Calculator</strong></div>
+                        <button class="menu-card calculator-button" data-page="page-calculator">
+                            <i class="fa-solid fa-crosshairs fa-xl" style="color: #fdfcf7;"></i>
+                            <div class="menu-card-text"><strong>Genie Calculator</strong></div>
                         </button>
-                        <button class="menu-card" data-page="page-food">
-                            <span class="icon">🍎</span>
-                            <div class="menu-card-text"><strong>Food List</strong></div>
+                        <button class="menu-card food-button" data-page="page-food">
+                            <i class="fa-solid fa-bowl-food fa-xl" style="color: #fdfcf7;"></i>
+                            <div class="menu-card-text"><strong>Genie Food List</strong></div>
                         </button>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
             <div id="page-calculator" class="page hidden">
                 <button class="back-btn">← Back to Menu</button>
                 <div class="feature-page">
-                    <h2>Calorie Calculator</h2>
+                    <h2>Genie Calculator</h2>
                     <p>Calculate your daily calorie needs (TDEE) to set a personal goal.</p>
                     <form id="calorie-calculator-form">
                         <div class="form-group"><label for="gender">Gender</label><select id="gender" name="gender"><option value="male">Male</option><option value="female">Female</option></select></div>
@@ -113,7 +113,7 @@
             <div id="page-food" class="page hidden">
                 <button class="back-btn">← Back to Menu</button>
                 <div class="feature-page">
-                    <h2>Log Food</h2>
+                    <h2>Genie Log Food</h2>
                     <p>Find food in our list or search our global database.</p>
                     <div class="form-group"><input type="search" id="food-search" placeholder="Search for food..."></div>
                     <div class="search-results">
