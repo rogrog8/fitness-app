@@ -67,8 +67,6 @@ h2 { font-size: 1.3rem; margin-bottom: 15px; }
     gap: 20px;
     margin-top: 20px;
 }
-
-/* Tombol Utama (Featured) */
 .menu-card.featured {
     background: var(--card-bg);
     border: 2px solid var(--border);
@@ -83,32 +81,16 @@ h2 { font-size: 1.3rem; margin-bottom: 15px; }
     width: 100%;
     font-family: 'Poppins', sans-serif;
 }
-.menu-card.featured:hover {
-    border-color: var(--primary);
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.05);
-}
-.menu-card.featured .icon {
-    font-size: 3rem;
-    color: var(--primary);
-}
-.menu-card.featured .menu-card-text strong {
-    font-size: 1.2rem;
-    color: var(--text);
-    display: block;
-}
-.menu-card.featured .menu-card-text span {
-    font-size: 0.9rem;
-    color: var(--text-light);
-}
+.menu-card.featured:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 8px 16px rgba(0,0,0,0.05); }
+.menu-card.featured .icon { font-size: 3rem; color: var(--primary); }
+.menu-card.featured .menu-card-text strong { font-size: 1.2rem; color: var(--text); display: block; }
+.menu-card.featured .menu-card-text span { font-size: 0.9rem; color: var(--text-light); }
 
-/* Tombol Sekunder */
 .secondary-menu {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 15px;
 }
-
 .secondary-menu .menu-card {
     background: var(--card-bg);
     border: 2px solid var(--light-gray);
@@ -126,57 +108,25 @@ h2 { font-size: 1.3rem; margin-bottom: 15px; }
     font-family: 'Poppins', sans-serif;
     min-height: 100px;
 }
-.secondary-menu .menu-card:hover {
-    border-color: var(--primary-light);
-    transform: translateY(-4px);
-}
-.secondary-menu .icon {
-    font-size: 1.8rem;
-    color: var(--primary-dark);
-}
-.secondary-menu .menu-card-text strong {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--text);
-}
+.secondary-menu .menu-card:hover { border-color: var(--primary); transform: translateY(-4px); }
+.secondary-menu .icon { font-size: 1.8rem; color: var(--primary-dark); }
+.secondary-menu .menu-card-text strong { font-size: 0.85rem; font-weight: 600; color: var(--text); }
 
-/* =================================
-   PANDUAN PENGGUNA (DIPERBARUI)
-   ================================= */
+/* Panduan Pengguna */
 .how-to-guide {
     margin-top: 30px;
     padding: 20px;
-    background-color: var(--background); /* Latar belakang lebih lembut */
+    background-color: var(--background);
     border-radius: 15px;
     border: 1px solid var(--border);
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04); /* Efek bayangan ke dalam */
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04);
 }
-.how-to-guide h2 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    text-align: center;
-    font-size: 1.1rem; /* Ukuran font judul disesuaikan */
-    font-weight: 700;
-    color: var(--primary-dark);
-}
-.how-to-guide ol {
-    padding-left: 25px; /* Sedikit lebih banyak ruang */
-    margin: 0;
-    list-style: none; /* Hapus penomoran default */
-    counter-reset: guide-counter;
-}
-.how-to-guide li {
-    counter-increment: guide-counter;
-    margin-bottom: 12px;
-    color: var(--text-light);
-    font-size: 0.9rem;
-    position: relative;
-}
-.how-to-guide li:last-child {
-    margin-bottom: 0;
-}
+.how-to-guide h2 { margin-top: 0; margin-bottom: 15px; text-align: center; font-size: 1.1rem; font-weight: 700; color: var(--primary-dark); }
+.how-to-guide ol { padding-left: 25px; margin: 0; list-style: none; counter-reset: guide-counter; }
+.how-to-guide li { counter-increment: guide-counter; margin-bottom: 12px; color: var(--text-light); font-size: 0.9rem; position: relative; }
+.how-to-guide li:last-child { margin-bottom: 0; }
 .how-to-guide li::before {
-    content: counter(guide-counter); /* Buat penomoran kustom */
+    content: counter(guide-counter);
     background-color: var(--primary);
     color: white;
     font-weight: 700;
@@ -191,12 +141,8 @@ h2 { font-size: 1.3rem; margin-bottom: 15px; }
     left: -35px;
     top: 0;
 }
-.how-to-guide strong {
-    color: var(--text);
-    font-weight: 600;
-}
+.how-to-guide strong { color: var(--text); font-weight: 600; }
 
-/* Tombol Kembali */
 .back-btn {
     background: var(--light-gray);
     color: var(--text-light);
@@ -212,4 +158,189 @@ h2 { font-size: 1.3rem; margin-bottom: 15px; }
 }
 .back-btn:hover { background: var(--primary); color: white; }
 
-/* ... (Semua gaya lain untuk Halaman Workout, Fitur, Dashboard, Modal, dan Responsive tetap sama) ... */
+/* Halaman Workout: Ringkasan Target */
+.goal-summary {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr) 1.5fr;
+    grid-template-areas: "goal food remaining" "exercise exercise remaining";
+    gap: 10px;
+    margin-bottom: 25px;
+}
+.goal-summary .goal-card:nth-child(1) { grid-area: goal; }
+.goal-summary .goal-card:nth-child(2) { grid-area: food; }
+.goal-summary .goal-card:nth-child(3) { grid-area: exercise; }
+.goal-summary .goal-card:nth-child(4) { grid-area: remaining; }
+.goal-card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.goal-card h3 {
+    margin: 0 0 5px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-light);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+.goal-card p { margin: 0; font-weight: 700; font-size: 1.1rem; color: var(--primary-dark); }
+.goal-card.remaining { background-color: var(--success); }
+.goal-card.remaining h3, .goal-card.remaining p { color: white; }
+.info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: transparent;
+    border: 1.5px solid var(--text-light);
+    color: var(--text-light);
+    font-size: 10px;
+    font-weight: 700;
+    font-style: normal;
+    cursor: help;
+    transition: all 0.2s ease;
+}
+.info-icon:hover { background-color: var(--primary); border-color: var(--primary); color: white; transform: scale(1.1); }
+
+.main-actions { margin-bottom: 25px; }
+.action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.action-btn {
+    background: var(--card-bg);
+    border: 2px solid var(--border);
+    border-radius: 15px;
+    padding: 15px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.action-btn:hover { border-color: var(--primary); transform: translateY(-3px); }
+
+/* Halaman Fitur (Kalkulator, Makanan) */
+.feature-page { background: var(--card-bg); padding: 20px; border-radius: 15px; }
+.feature-page > p {
+    color: var(--text-light);
+    margin-top: -10px;
+    margin-bottom: 25px;
+    font-size: 0.9rem;
+}
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
+
+#page-calculator .form-group {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    align-items: center;
+    gap: 12px;
+}
+#page-calculator label { text-align: right; font-weight: 600; color: var(--primary-dark); font-size: 0.95rem; }
+#page-calculator input, #page-calculator select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    background-color: white;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+#page-calculator input:focus, #page-calculator select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
+}
+#page-calculator .save-btn { grid-column: 2; box-shadow: 0 2px 6px rgba(255, 107, 53, 0.3); }
+#calculator-result { margin-top: 25px; padding: 18px; background: rgba(46, 125, 50, 0.1); border-radius: 8px; border-left: 4px solid var(--success); animation: fadeIn 0.4s ease-out; }
+#calculator-result h3 { font-size: 1rem; color: var(--text-light); text-align: center; }
+#calculator-result .big-text { color: var(--success); font-size: 1.8rem; text-align: center; }
+
+#page-food input { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 10px; box-sizing: border-box; }
+.search-results { margin-top: 20px; }
+.results-heading { font-size: 0.9rem; font-weight: 600; color: var(--text-light); margin-top: 15px; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 2px solid var(--light-gray); }
+#food-list-local, #food-list-api { display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto; }
+.food-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid var(--light-gray); border-radius: 8px; }
+.food-item-info span { display: block; font-size: 0.8rem; color: var(--text-light); }
+.add-food-btn { background-color: var(--primary); color: white; border: none; width: 30px; height: 30px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; transition: all 0.2s ease; }
+.add-food-btn:hover { background-color: var(--primary-dark); transform: scale(1.1); }
+
+/* Dashboard (Chart & History) */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: flex-start;
+}
+.chart-container { background: var(--card-bg); padding: 20px; border-radius: 15px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
+.chart-wrapper { width: 100%; max-width: 220px; aspect-ratio: 1 / 1; position: relative; margin-bottom: 20px; }
+#dailyCalorieChart { position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important; }
+#chartLegend { display: flex; flex-direction: column; align-items: flex-start; width: 100%; font-size: 0.8rem; color: var(--text-light); }
+.legend-item { display: flex; align-items: center; margin-bottom: 6px; width: 100%; justify-content: space-between; }
+.legend-label { display: flex; align-items: center; text-transform: capitalize; }
+.legend-color { width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; flex-shrink: 0; }
+.legend-value { font-weight: 600; color: var(--text); }
+#historyContainer h2 { margin-top: 0; }
+.history-header-wrapper { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.history-header-wrapper h2 { margin-bottom: 0; }
+.clear-btn { background: transparent; border: 1.5px solid var(--danger); color: var(--danger); padding: 4px 12px; font-size: 0.75rem; font-weight: 600; border-radius: 20px; cursor: pointer; transition: all 0.2s ease; }
+.clear-btn:hover { background: var(--danger); color: white; }
+#historyList { display: flex; flex-direction: column; gap: 8px; }
+.history-item { background: var(--card-bg); padding: 10px 15px; border-radius: 10px; border-left: 4px solid var(--primary); display: flex; justify-content: space-between; align-items: center; }
+.history-item-details-container { flex-grow: 1; padding-right: 8px; }
+.history-item-header { font-weight: 600; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; text-transform: capitalize; }
+.history-item-details { font-size: 0.75rem; color: var(--text-light); }
+.delete-history-btn { width: 24px; height: 24px; border: 1px solid var(--light-gray); background-color: transparent; color: var(--text-light); border-radius: 50%; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s ease; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; }
+.delete-history-btn:hover { background-color: var(--danger); color: white; border-color: var(--danger); transform: rotate(90deg) scale(1.05); }
+
+/* =================================
+   5. Modal
+   ================================= */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+.modal-content { background: white; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+.modal-content ul { padding-left: 20px; }
+.modal-content li { margin-bottom: 10px; }
+.close-btn { position: absolute; top: 10px; right: 10px; border: none; background: transparent; font-size: 1.5rem; cursor: pointer; color: var(--text-light); }
+.modal-content h2 { margin-top: 0; }
+.modal-content select, .modal-content input { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 10px; margin: 10px 0; box-sizing: border-box; }
+.save-btn { background: var(--primary); color: white; border: none; padding: 14px; width: 100%; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 10px; transition: background-color 0.2s ease; }
+.save-btn:active { background-color: var(--primary-dark); transform: translateY(1px); }
+.athletic-stats { display: flex; justify-content: space-around; margin: 15px 0; font-weight: 600; }
+
+/* Status Fokus untuk Aksesibilitas */
+button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; box-shadow: none; }
+/* Animasi */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* =================================
+   6. Responsive
+   ================================= */
+@media (max-width: 768px) {
+    .dashboard-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+    #page-calculator .form-group { grid-template-columns: 1fr; gap: 8px; }
+    #page-calculator label { text-align: left; margin-bottom: 4px; }
+    #page-calculator .save-btn { grid-column: 1; }
+}
+@media (max-width: 480px) {
+    body { padding: 10px; }
+    .glass-container { padding: 15px; }
+    .action-buttons { grid-template-columns: 1fr; }
+    .app-header { flex-direction: column; gap: 10px; }
+    .menu-card.featured { padding: 20px; gap: 15px; }
+    .menu-card.featured .icon { font-size: 2.5rem; }
+    .menu-card.featured .menu-card-text strong { font-size: 1.1rem; }
+    .secondary-menu { grid-template-columns: 1fr 1fr; }
+    .secondary-menu .menu-card { flex-direction: row; justify-content: flex-start; text-align: left; gap: 15px; }
+    .secondary-menu .menu-card-text strong { font-size: 0.9rem; }
+}

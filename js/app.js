@@ -64,9 +64,7 @@ class App {
     
     navigate(e) {
         const menuCard = e.target.closest('.menu-card');
-        if (menuCard) {
-            this.ui.showPage(menuCard.dataset.page);
-        }
+        if (menuCard) { this.ui.showPage(menuCard.dataset.page); }
     }
 
     logActivity(logObject) {
@@ -95,9 +93,7 @@ class App {
     handleHistoryClick(e) {
         const deleteButton = e.target.closest('.delete-history-btn');
         if (deleteButton) {
-            if (confirm('Are you sure you want to delete this entry?')) {
-                this.deleteLog(deleteButton.dataset.id);
-            }
+            if (confirm('Are you sure you want to delete this entry?')) { this.deleteLog(deleteButton.dataset.id); }
         }
     }
 
@@ -141,12 +137,12 @@ class App {
     addFood(e) {
         const addBtn = e.target.closest('.add-food-btn');
         if (addBtn) {
-            const foodDetails = JSON.parse(addBtn.dataset.name);
+            const foodDetails = JSON.parse(addBtn.dataset.foodDetails);
             if (foodDetails) {
                 this.logActivity({ type: 'food', ...foodDetails });
                 alert(`${foodDetails.name} has been added to your log.`);
                 this.ui.foodSearchEl.value = '';
-                this.ui.renderFoodList(this.foodDataArray.slice(0, 10));
+                this.ui.renderFoodList(this.foodDataArray.slice(0, 10), 'Common Foods');
                 this.ui.foodListApiEl.innerHTML = '';
             }
         }
@@ -201,13 +197,12 @@ class App {
                 distanceDisplay.textContent = (distance / 1000).toFixed(2);
             }
         }, () => alert('Could not get location.'), { enableHighAccuracy: true });
-        document.getElementById('startAthleticBtn').classList.add('hidden');
-        document.getElementById('stopAthleticBtn').classList.remove('hidden');
+        document.getElementById('startAthleticBtn').classList.add('hidden'); document.getElementById('stopAthleticBtn').classList.add('hidden');
     }
 
     loadInitialData() {
         this.ui.currentDateEl.textContent = this.ui.formatDate(this.today);
-        this.ui.renderFoodList(this.foodDataArray.slice(0, 10));
+        this.ui.renderFoodList(this.foodDataArray.slice(0, 10), 'Common Foods');
         this.ui.renderUI(this.fitnessDiary[this.today] || [], this.userProfile);
         this.ui.showPage('page-home');
     }
