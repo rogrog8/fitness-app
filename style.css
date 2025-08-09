@@ -1,0 +1,215 @@
+/* Palet Warna & Variabel */
+:root {
+    --primary: #FF6B35;
+    --primary-dark: #E05725;
+    --glass: rgba(255, 255, 255, 0.4);
+    --text: #2D3436;
+    --text-light: #636E72;
+    --bg-gradient: linear-gradient(135deg, #FFF6F0 0%, #FFE0D1 100%);
+    --card-bg: white;
+    --border: #FFD1B3;
+    --danger: #d32f2f;
+    --light-gray: #f0f0f0;
+    --success: #2e7d32;
+}
+
+/* =================================
+   1. Reset & Gaya Dasar
+   ================================= */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-gradient);
+    margin: 0;
+    padding: 15px;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.glass-container {
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 8px 32px rgba(255, 107, 53, 0.15);
+    max-width: 800px;
+    margin: 0 auto;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+h2 { font-size: 1.3rem; margin-bottom: 15px; }
+.hidden { display: none !important; }
+
+/* =================================
+   2. Komponen & Halaman
+   ================================= */
+
+/* Header */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+.app-header h1 { margin: 0; font-size: 1.6rem; color: var(--primary-dark); }
+.date-display { font-weight: 600; font-size: 0.85rem; }
+
+/* Kontrol Halaman */
+.page.hidden { display: none; }
+.page.active { display: block; }
+
+/* Menu Utama */
+.main-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* Tombol Utama (Featured) */
+.menu-card.featured {
+    background: var(--card-bg);
+    border: 2px solid var(--border);
+    border-radius: 15px;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+}
+.menu-card.featured:hover {
+    border-color: var(--primary);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+}
+.menu-card.featured .icon {
+    font-size: 3rem;
+    color: var(--primary);
+}
+.menu-card.featured .menu-card-text strong {
+    font-size: 1.2rem;
+    color: var(--text);
+    display: block;
+}
+.menu-card.featured .menu-card-text span {
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+/* Tombol Sekunder */
+.secondary-menu {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.secondary-menu .menu-card {
+    background: var(--card-bg);
+    border: 2px solid var(--light-gray);
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+    min-height: 100px;
+}
+.secondary-menu .menu-card:hover {
+    border-color: var(--primary-light);
+    transform: translateY(-4px);
+}
+.secondary-menu .icon {
+    font-size: 1.8rem;
+    color: var(--primary-dark);
+}
+.secondary-menu .menu-card-text strong {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+/* =================================
+   PANDUAN PENGGUNA (DIPERBARUI)
+   ================================= */
+.how-to-guide {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: var(--background); /* Latar belakang lebih lembut */
+    border-radius: 15px;
+    border: 1px solid var(--border);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04); /* Efek bayangan ke dalam */
+}
+.how-to-guide h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 1.1rem; /* Ukuran font judul disesuaikan */
+    font-weight: 700;
+    color: var(--primary-dark);
+}
+.how-to-guide ol {
+    padding-left: 25px; /* Sedikit lebih banyak ruang */
+    margin: 0;
+    list-style: none; /* Hapus penomoran default */
+    counter-reset: guide-counter;
+}
+.how-to-guide li {
+    counter-increment: guide-counter;
+    margin-bottom: 12px;
+    color: var(--text-light);
+    font-size: 0.9rem;
+    position: relative;
+}
+.how-to-guide li:last-child {
+    margin-bottom: 0;
+}
+.how-to-guide li::before {
+    content: counter(guide-counter); /* Buat penomoran kustom */
+    background-color: var(--primary);
+    color: white;
+    font-weight: 700;
+    font-size: 0.8rem;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: -35px;
+    top: 0;
+}
+.how-to-guide strong {
+    color: var(--text);
+    font-weight: 600;
+}
+
+/* Tombol Kembali */
+.back-btn {
+    background: var(--light-gray);
+    color: var(--text-light);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: all 0.2s ease;
+    font-size: 0.8rem;
+}
+.back-btn:hover { background: var(--primary); color: white; }
+
+/* ... (Semua gaya lain untuk Halaman Workout, Fitur, Dashboard, Modal, dan Responsive tetap sama) ... */

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyFitDiary | All-in-One Health Hub</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="glass-container">
+        <header class="app-header">
+            <h1><span class="icon">💪</span> MyFitDiary</h1>
+            <div class="date-display" id="currentDate"></div>
+        </header>
+
+        <main class="content">
+            <div id="page-home" class="page active">
+                <div class="main-menu">
+                    <button class="menu-card featured" data-page="page-workout">
+                        <span class="icon">💪</span>
+                        <div class="menu-card-text">
+                            <strong>Fitness App</strong>
+                            <span>Track your workouts &amp; calories</span>
+                        </div>
+                    </button>
+                    <div class="secondary-menu">
+                        <button class="menu-card" data-page="page-calculator">
+                            <span class="icon">📊</span>
+                            <div class="menu-card-text"><strong>Calculator</strong></div>
+                        </button>
+                        <button class="menu-card" data-page="page-food">
+                            <span class="icon">🍎</span>
+                            <div class="menu-card-text"><strong>Food List</strong></div>
+                        </button>
+                    </div>
+                </div>
+
+                <section class="how-to-guide">
+                    <h2>How to Use This App</h2>
+                    <ol>
+                        <li>
+                            <strong>Set Your Goal:</strong> Go to the <strong>Calculator</strong> to determine your personal daily calorie goal.
+                        </li>
+                        <li>
+                            <strong>Log Your Meals:</strong> Use the <strong>Food List</strong> to find and log the food you eat.
+                        </li>
+                        <li>
+                            <strong>Track Activity:</strong> Open the <strong>Fitness App</strong> to log your exercises and see your progress toward your goal.
+                        </li>
+                    </ol>
+                </section>
+            </div>
+
+            <div id="page-workout" class="page hidden">
+                <button class="back-btn">← Back to Menu</button>
+                <section class="goal-summary">
+                    <div class="goal-card"><h3>Goal</h3><p><span id="calorieGoal">2000</span> kcal</p></div>
+                    <div class="goal-card"><h3>Food</h3><p>- <span id="caloriesIn">0</span> kcal</p></div>
+                    <div class="goal-card"><h3>Exercise <span class="info-icon" id="exerciseRefBtn" title="Calorie burn reference">i</span></h3><p>+ <span id="caloriesOut">0</span> kcal</p></div>
+                    <div class="goal-card remaining"><h3>Remaining</h3><p><span id="caloriesRemaining">2000</span> kcal</p></div>
+                </section>
+                <section class="main-actions">
+                    <h2><span class="icon">➕</span> Add Activity</h2>
+                    <div class="action-buttons">
+                        <button id="strengthBtn" class="action-btn"><span class="icon">🏋️</span><div><strong>Strength Training</strong><span>Add Push-ups, Squats, etc.</span></div></button>
+                        <button id="athleticBtn" class="action-btn"><span class="icon">🏃‍♂️</span><div><strong>Athletic Training</strong><span>Track Running & Walking</span></div></button>
+                    </div>
+                </section>
+                <section id="dashboardSection" class="dashboard-grid hidden">
+                    <div class="chart-container">
+                        <div class="chart-wrapper"><canvas id="dailyCalorieChart"></canvas></div>
+                        <div id="chartLegend"></div>
+                    </div>
+                    <div id="historyContainer">
+                        <div class="history-header-wrapper">
+                            <h2><span class="icon">📅</span> Today's History</h2>
+                            <button id="clearAllBtn" class="clear-btn hidden">Clear All</button>
+                        </div>
+                        <div id="historyList"></div>
+                    </div>
+                </section>
+            </div>
+
+            <div id="page-calculator" class="page hidden">
+                <button class="back-btn">← Back to Menu</button>
+                <div class="feature-page">
+                    <h2>Calorie Calculator</h2>
+                    <p>Calculate your daily calorie needs (TDEE) to set a personal goal.</p>
+                    <form id="calorie-calculator-form">
+                        <div class="form-group"><label for="gender">Gender</label><select id="gender" name="gender"><option value="male">Male</option><option value="female">Female</option></select></div>
+                        <div class="form-group"><label for="age">Age</label><input type="number" id="age" placeholder="e.g., 25" required></div>
+                        <div class="form-group"><label for="weight">Weight (kg)</label><input type="number" id="weight" placeholder="e.g., 70" required></div>
+                        <div class="form-group"><label for="height">Height (cm)</label><input type="number" id="height" placeholder="e.g., 175" required></div>
+                        <div class="form-group"><label for="activity-level">Activity Level</label><select id="activity-level"><option value="1.2">Sedentary (office job)</option><option value="1.375">Lightly Active (exercise 1-3 days/week)</option><option value="1.55">Moderately Active (exercise 3-5 days/week)</option><option value="1.725">Very Active (exercise 6-7 days/week)</option><option value="1.9">Extremely Active (physical job/training)</option></select></div>
+                        <button type="submit" class="save-btn">Calculate & Save Goal</button>
+                    </form>
+                    <div id="calculator-result" class="hidden">
+                        <h3>Your Daily Goal Is:</h3>
+                        <p class="big-text"><span id="tdee-result">0</span> kcal</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-food" class="page hidden">
+                <button class="back-btn">← Back to Menu</button>
+                <div class="feature-page">
+                    <h2>Log Food</h2>
+                    <p>Find food in our list or search our global database.</p>
+                    <div class="form-group"><input type="search" id="food-search" placeholder="Search for food..."></div>
+                    <div class="search-results">
+                        <div id="food-list-local"></div>
+                        <div id="food-list-api"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="strengthModal" class="modal-overlay hidden"><div class="modal-content"><button class="close-btn" data-modal-id="strengthModal">&times;</button><h2>Add Strength Workout</h2><select id="strengthType"><option value="push-up">Push-Up</option><option value="sit-up">Sit-Up</option><option value="squat">Squat</option><option value="plank">Plank</option></select><div class="input-group"><label for="strengthAmount">Amount (reps/seconds)</label><input type="number" id="strengthAmount" placeholder="e.g., 20"></div><button id="saveStrengthBtn" class="save-btn">Save</button></div></div>
+    <div id="athleticModal" class="modal-overlay hidden"><div class="modal-content"><button class="close-btn" data-modal-id="athleticModal">&times;</button><h2>Start Athletic Workout</h2><p>The application will ask for permission to access your location.</p><div id="map" style="height: 200px; width: 100%; margin-bottom: 15px; border-radius: 10px;"></div><div class="athletic-stats"><div><strong>Distance:</strong> <span id="distanceDisplay">0.00</span> km</div><div><strong>Time:</strong> <span id="athleticTimerDisplay">00:00</span></div></div><button id="startAthleticBtn" class="save-btn">Start Running</button><button id="stopAthleticBtn" class="save-btn hidden" style="background-color: var(--primary-dark);">Finish & Save</button></div></div>
+    <div id="refModal" class="modal-overlay hidden"><div class="modal-content"><button class="close-btn" data-modal-id="refModal">&times;</button><h2>Calorie Calculation Reference</h2><p>Calorie calculation in this app is an <strong>estimation</strong> based on the <strong>MET (Metabolic Equivalent of Task)</strong> value.</p><ul><li><strong>Running/Walking:</strong> Approx. <strong>60 kcal per kilometer</strong>.</li><li><strong>Strength Training:</strong> Based on intensity and repetitions.</li><li><strong>Plank:</strong> Based on duration.</li></ul><p><small>Actual values may vary depending on your weight, age, and intensity.</small></p></div></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/app.js" type="module"></script>
+
+</body>
+</html>
