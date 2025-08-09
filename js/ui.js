@@ -19,6 +19,8 @@ export class UI {
         this.calculatorResultEl = document.getElementById('calculator-result');
         this.foodSearchEl = document.getElementById('food-search');
         this.clearAllBtn = document.getElementById('clearAllBtn');
+        this.startAthleticBtn = document.getElementById('startAthleticBtn');
+        this.stopAthleticBtn = document.getElementById('stopAthleticBtn');
         this.dailyChart = null;
         this.calorieColors = ['#FF6B35', '#E05725', '#2D3436', '#FFD1B3', '#636E72', '#B2BEC3'];
     }
@@ -35,8 +37,12 @@ export class UI {
     renderUI(todayData, userProfile) {
         let totalCaloriesIn = 0, totalCaloriesOut = 0;
         const exerciseData = [];
-        todayData.sort((a, b) => b.id - a.id);
-        todayData.forEach(item => {
+        
+        // Memastikan todayData adalah array kosong jika tidak ada data
+        const data = todayData || [];
+        data.sort((a, b) => b.id - a.id);
+
+        data.forEach(item => {
             if (item.type === 'food') {
                 totalCaloriesIn += item.calories;
             } else if (['push-up', 'sit-up', 'squat', 'plank', 'lari'].includes(item.type)) {
@@ -45,22 +51,19 @@ export class UI {
             }
         });
         
-        // ==========================================================
-        // PERBAIKAN LOGIKA UTAMA DI SINI
-        // Target Bertambah jika Makan, Berkurang jika Olahraga
-        // ==========================================================
-        const remaining = userProfile.dailyGoal + totalCaloriesIn - totalCaloriesOut;
+        const remaining = (userProfile.dailyGoal || 0) - totalCaloriesIn + totalCaloriesOut;
 
-        this.calorieGoalEl.textContent = Math.round(userProfile.dailyGoal);
+        this.calorieGoalEl.textContent = Math.round(userProfile.dailyGoal || 0);
         this.caloriesInEl.textContent = Math.round(totalCaloriesIn);
         this.caloriesOutEl.textContent = Math.round(totalCaloriesOut);
         this.caloriesRemainingEl.textContent = Math.round(remaining);
         
-        if (todayData.length > 0) {
+        if (data.length > 0) {
             this.dashboardSection.classList.remove('hidden');
             this.clearAllBtn.classList.remove('hidden');
             this.historyListEl.innerHTML = '';
-            todayData.forEach(item => this.renderHistoryItem(item));
+            data.forEach(item => this.renderHistoryItem(item));
+            
             const chartLabels = exerciseData.map(item => item.type.replace('-', ' '));
             const chartData = exerciseData.map(item => Math.round(item.calories));
             if (exerciseData.length > 0) {
@@ -79,37 +82,47 @@ export class UI {
         const historyItem = document.createElement('div');
         historyItem.className = 'history-item';
         let icon = '❓', detailsHTML = '', calorieDisplay = '';
+
         switch(item.type) {
             case 'food':
                 icon = '🍎';
                 detailsHTML = `Serving: ${item.serving}`;
-                calorieDisplay = `<span>+${Math.round(item.calories)} kcal</span>`; // Makan menambah target
+                calorieDisplay = `<span>-${Math.round(item.calories)} kcal</span>`;
                 break;
+            // --- BAGIAN YANG HILANG DITAMBAHKAN KEMBALI ---
             case 'stress':
-                 // Tidak menampilkan kalori untuk stres
                 icon = '🧘';
                 detailsHTML = `Stress level recorded: ${item.level}`;
+                // Tidak ada tampilan kalori untuk stres
                 break;
             default: // Olahraga
                 icon = '💪';
                 detailsHTML = `Amount: ${item.amount.toFixed(item.type === 'lari' ? 2 : 0)} ${this.getUnit(item.type)}`;
                 if (item.duration) detailsHTML += ` &middot; Time: ${this.formatTime(item.duration)}`;
-                calorieDisplay = `<span style="color: var(--danger);">${-Math.round(item.calories)} kcal</span>`; // Olahraga mengurangi target
+                calorieDisplay = `<span style="color: var(--success);">+${Math.round(item.calories)} kcal</span>`;
                 break;
         }
-        historyItem.innerHTML = `<div class="history-item-details-container"><div class="history-item-header"><span style="text-transform: capitalize;">${icon} ${item.name || item.type.replace('-', ' ')}</span>${calorieDisplay}</div><div class="history-item-details">${detailsHTML}</div></div><button class="delete-history-btn" data-id="${item.id}" title="Delete this entry">&times;</button>`;
+        
+        historyItem.innerHTML = `
+            <div class="history-item-details-container">
+                <div class="history-item-header">
+                    <span style="text-transform: capitalize;">${icon} ${item.name || item.type.replace('-', ' ')}</span>
+                    ${calorieDisplay}
+                </div>
+                <div class="history-item-details">${detailsHTML}</div>
+            </div>
+            <button class="delete-history-btn" data-id="${item.id}" title="Delete this entry">&times;</button>
+        `;
         this.historyListEl.appendChild(historyItem);
     }
 
     renderFoodList(foods, title = null) {
-        const container = title ? this.foodListLocalEl : this.foodListApiEl;
+        const container = this.foodListLocalEl;
         container.innerHTML = '';
         if (!foods || foods.length === 0) {
-            if (title === null) {
-                container.innerHTML = `<p style="text-align: center; color: var(--text-light);">No online results found.</p>`;
-            }
+            if(title) container.innerHTML = `<h3 class="results-heading">${title}</h3>`;
             return;
-        }
+        };
 
         if (title) {
             container.innerHTML = `<h3 class="results-heading">${title}</h3>`;
