@@ -152,6 +152,11 @@ class App {
         // --- PERBAIKAN DI SINI ---
         this.ui.startAthleticBtn.classList.remove('hidden');
         this.ui.stopAthleticBtn.classList.add('hidden');
+
+        // SARAN: Reset juga tampilan display agar bersih
+        document.getElementById('distanceDisplay').textContent = '0.00';
+        document.getElementById('athleticTimerDisplay').textContent = '00:00';
+
     }
     initMap() {
         if (this.map) return;
@@ -192,6 +197,16 @@ class App {
         this.ui.showPage('page-home');
     }
 }
-
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(registration => {
+        console.log('Service Worker berhasil didaftarkan:', registration);
+      })
+      .catch(registrationError => {
+        console.log('Pendaftaran Service Worker gagal:', registrationError);
+      });
+  });
+}
 // Inisialisasi Aplikasi
 const app = new App();
