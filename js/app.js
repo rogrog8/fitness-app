@@ -51,6 +51,7 @@ class App {
         // Riwayat
         this.ui.historyListEl.addEventListener('click', (e) => this.handleHistoryClick(e));
         this.ui.clearAllBtn.addEventListener('click', () => this.clearAllActivities());
+        document.getElementById('reloadLocationBtn').addEventListener('click', () => this.initMap());
     }
 
     // --- METODE-METODE APLIKASI ---
@@ -141,57 +142,56 @@ class App {
         this.ui.closeModal(document.getElementById('strengthModal'));
         strengthAmountEl.value = '';
     }
-    stopAthleticWorkout() {
-        if(this.watchId) navigator.geolocation.clearWatch(this.watchId); if(this.athleticTimerInterval) clearInterval(this.athleticTimerInterval); this.watchId = null;
-        const distance = parseFloat(document.getElementById('distanceDisplay').textContent) || 0;
-        if (distance === 0 && this.athleticSeconds === 0) { this.ui.closeModal(document.getElementById('athleticModal')); return; }
-        const calories = distance * 60;
-        this.logActivity({ type: 'lari', name: 'Running', amount: distance, duration: this.athleticSeconds, calories });
-        this.ui.closeModal(document.getElementById('athleticModal'));
-        
-        // --- PERBAIKAN DI SINI ---
-        this.ui.startAthleticBtn.classList.remove('hidden');
-        this.ui.stopAthleticBtn.classList.add('hidden');
+stopAthleticWorkout() {
+    if(this.watchId) navigator.geolocation.clearWatch(this.watchId); if(this.athleticTimerInterval) clearInterval(this.athleticTimerInterval); this.watchId = null;
+    const distance = parseFloat(document.getElementById('distanceDisplay').textContent) || 0;
+    if (distance === 0 && this.athleticSeconds === 0) { this.ui.closeModal(document.getElementById('athleticModal')); return; }
+    const calories = distance * 60;
+    this.logActivity({ type: 'lari', name: 'Running', amount: distance, duration: this.athleticSeconds, calories });
+    this.ui.closeModal(document.getElementById('athleticModal'));
+    
+    this.ui.startAthleticBtn.classList.remove('hidden');
+    this.ui.stopAthleticBtn.classList.add('hidden');
 
-        // SARAN: Reset juga tampilan display agar bersih
-        document.getElementById('distanceDisplay').textContent = '0.00';
-        document.getElementById('athleticTimerDisplay').textContent = '00:00';
+    document.getElementById('distanceDisplay').textContent = '0.00';
+    document.getElementById('athleticTimerDisplay').textContent = '00:00';
 
+    // --- TAMBAHAN UNTUK MERESET PETA ---
+    if (this.map) {
+        this.map.remove(); // Hapus peta dari DOM
+        this.map = null;   // Setel ulang properti map
+        this.routeLine = null; // Setel ulang properti routeLine
     }
+    // --- AKHIR TAMBAHAN ---
+}
 initMap() {
-    if (this.map) return; // Jangan inisialisasi ulang jika peta sudah ada
+    if (this.map) return;
     const mapEl = document.getElementById('map');
-    if (!mapEl) return;
+    const reloadBtn = document.getElementById('reloadLocationBtn');
+    if (!mapEl || !reloadBtn) return;
 
-    // Tampilkan pesan loading selagi mencari lokasi
+    // Sembunyikan tombol retry setiap kali inisialisasi dimulai
+    reloadBtn.classList.add('hidden');
     mapEl.innerHTML = '<p style="text-align: center; padding-top: 20px; color: var(--text-light);">Mencari lokasi Anda...</p>';
 
     navigator.geolocation.getCurrentPosition(
-        // --- Success Callback ---
         (pos) => {
-            // Hapus pesan loading
+            // ... (bagian success callback tidak berubah)
             mapEl.innerHTML = ''; 
-
             const userLocation = [pos.coords.latitude, pos.coords.longitude];
-            
-            // Inisialisasi peta SETELAH lokasi didapatkan
-            this.map = L.map(mapEl).setView(userLocation, 16); // <-- Langsung set ke lokasi pengguna
-            
+            this.map = L.map(mapEl).setView(userLocation, 16);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap contributors'
             }).addTo(this.map);
         },
-        // --- Error Callback ---
         (err) => {
+            // --- BAGIAN INI DIPERBARUI ---
             console.error(`ERROR(${err.code}): ${err.message}`);
-            // Tampilkan pesan error jika gagal mendapatkan lokasi
             mapEl.innerHTML = `<p style="text-align: center; padding-top: 20px; color: var(--danger);">Gagal mendapatkan lokasi. Pastikan izin lokasi telah diberikan.</p>`;
-            
-            // Opsional: Tetap tampilkan peta Jakarta jika lokasi gagal didapat
-            // this.map = L.map(mapEl).setView([-6.200000, 106.816666], 13);
-            // L.tileLayer(...).addTo(this.map);
+            // Tampilkan tombol retry jika gagal
+            reloadBtn.classList.remove('hidden'); 
+            // --- AKHIR BAGIAN YANG DIPERBARUI ---
         },
-        // --- Options ---
         { enableHighAccuracy: true }
     );
 }

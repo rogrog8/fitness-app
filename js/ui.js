@@ -21,6 +21,12 @@ export class UI {
         this.clearAllBtn = document.getElementById('clearAllBtn');
         this.startAthleticBtn = document.getElementById('startAthleticBtn');
         this.stopAthleticBtn = document.getElementById('stopAthleticBtn');
+
+        // --- Elemen baru untuk UI dinamis ---
+        this.remainingLabelEl = document.getElementById('remainingLabel');
+        this.remainingSubtextEl = document.getElementById('remainingSubtext');
+        // --- Akhir elemen baru ---
+
         this.dailyChart = null;
         this.calorieColors = ['#FF6B35', '#E05725', '#2D3436', '#FFD1B3', '#636E72', '#B2BEC3'];
     }
@@ -38,7 +44,6 @@ export class UI {
         let totalCaloriesIn = 0, totalCaloriesOut = 0;
         const exerciseData = [];
         
-        // Memastikan todayData adalah array kosong jika tidak ada data
         const data = todayData || [];
         data.sort((a, b) => b.id - a.id);
 
@@ -51,12 +56,20 @@ export class UI {
             }
         });
         
+        // --- Menggunakan Logika #1: Anggaran Fleksibel ---
         const remaining = (userProfile.dailyGoal || 0) - totalCaloriesIn + totalCaloriesOut;
 
+        // --- Bagian yang diperbarui untuk menampilkan data & UI dinamis ---
         this.calorieGoalEl.textContent = Math.round(userProfile.dailyGoal || 0);
         this.caloriesInEl.textContent = Math.round(totalCaloriesIn);
         this.caloriesOutEl.textContent = Math.round(totalCaloriesOut);
+        
+        // Mengatur UI dinamis untuk "Remaining" berdasarkan Logika #1
+        this.remainingLabelEl.textContent = 'Today Calorie Remaining';
         this.caloriesRemainingEl.textContent = Math.round(remaining);
+        this.remainingSubtextEl.textContent = 'Exercise Will Increase Your Calorie Allowance';
+        this.remainingSubtextEl.style.color = '#FFFFFF'; // Mengatur warna menjadi putih
+        // --- Akhir bagian yang diperbarui ---
         
         if (data.length > 0) {
             this.dashboardSection.classList.remove('hidden');
@@ -89,11 +102,9 @@ export class UI {
                 detailsHTML = `Serving: ${item.serving}`;
                 calorieDisplay = `<span>-${Math.round(item.calories)} kcal</span>`;
                 break;
-            // --- BAGIAN YANG HILANG DITAMBAHKAN KEMBALI ---
             case 'stress':
                 icon = '🧘';
                 detailsHTML = `Stress level recorded: ${item.level}`;
-                // Tidak ada tampilan kalori untuk stres
                 break;
             default: // Olahraga
                 icon = '💪';

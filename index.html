@@ -47,13 +47,19 @@
             </div>
 
             <div id="page-workout" class="page hidden">
-                <button class="back-btn">← Back to Menu</button>
-                <section class="goal-summary">
-                    <div class="goal-card"><h3>Goal</h3><p><span id="calorieGoal">0</span> kcal</p></div>
-                    <div class="goal-card"><h3>Food</h3><p>+ <span id="caloriesIn">0</span> kcal</p></div>
-                    <div class="goal-card"><h3>Exercise <span class="info-icon" id="exerciseRefBtn" title="Calorie burn reference">i</span></h3><p>- <span id="caloriesOut">0</span> kcal</p></div>
-                    <div class="goal-card remaining"><h3>Remaining</h3><p><span id="caloriesRemaining">0</span> kcal</p></div>
-                </section>
+<section class="goal-summary">
+    <div class="goal-card"><h3>Goal</h3><p><span id="calorieGoal">0</span> kcal</p></div>
+
+    <div class="goal-card"><h3>Food</h3><p>- <span id="caloriesIn">0</span> kcal</p></div>
+
+    <div class="goal-card"><h3>Exercise <span class="info-icon" id="exerciseRefBtn" title="Calorie burn reference">i</span></h3><p>+ <span id="caloriesOut">0</span> kcal</p></div>
+    
+    <div class="goal-card remaining">
+        <h2 id="remainingLabel">Sisa Kalori</h2>
+        <h1 id="caloriesRemaining">0</h1>
+        <p id="remainingSubtext" class="subtext"></p>
+    </div>
+</section>
                 <section class="main-actions">
                     <h2><span class="icon">➕</span> Add Activity</h2>
                     <div class="action-buttons">
@@ -124,7 +130,25 @@
     </div>
 
     <div id="strengthModal" class="modal-overlay hidden"><div class="modal-content"><button class="close-btn" data-modal-id="strengthModal">&times;</button><h2>Add Strength Workout</h2><select id="strengthType"><option value="push-up">Push-Up</option><option value="sit-up">Sit-Up</option><option value="squat">Squat</option><option value="plank">Plank</option></select><div class="input-group"><label for="strengthAmount">Amount (reps/seconds)</label><input type="number" id="strengthAmount" placeholder="e.g., 20"></div><button id="saveStrengthBtn" class="save-btn">Save</button></div></div>
-    <div id="athleticModal" class="modal-overlay hidden"><div class="modal-content"><button class="close-btn" data-modal-id="athleticModal">&times;</button><h2>Start Athletic Workout</h2><p>The application will ask for permission to access your location.</p><div id="map" style="height: 200px; width: 100%; margin-bottom: 15px; border-radius: 10px;"></div><div class="athletic-stats"><div><strong>Distance:</strong> <span id="distanceDisplay">0.00</span> km</div><div><strong>Time:</strong> <span id="athleticTimerDisplay">00:00</span></div></div><button id="startAthleticBtn" class="save-btn">Start Running</button><button id="stopAthleticBtn" class="save-btn hidden" style="background-color: var(--primary-dark);">Finish & Save</button></div></div>
+    <div id="athleticModal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <button class="close-btn" data-modal-id="athleticModal">&times;</button>
+        <h2>Start Athletic Workout</h2>
+        <p>The application will ask for permission to access your location.</p>
+        <div id="map" style="height: 200px; width: 100%; margin-bottom: 15px; border-radius: 10px;"></div>
+        
+        <button id="reloadLocationBtn" class="save-btn hidden" style="background-color: #f39c12; margin-top: -10px; margin-bottom: 10px;">
+            <i class="fas fa-sync-alt"></i> Retry Location
+        </button>
+        
+        <div class="athletic-stats">
+            <div><strong>Distance:</strong> <span id="distanceDisplay">0.00</span> km</div>
+            <div><strong>Time:</strong> <span id="athleticTimerDisplay">00:00</span></div>
+        </div>
+        <button id="startAthleticBtn" class="save-btn">Start Running</button>
+        <button id="stopAthleticBtn" class="save-btn hidden" style="background-color: var(--primary-dark);">Finish & Save</button>
+    </div>
+    </div>
     <div id="refModal" class="modal-overlay hidden"><div class="modal-content"><button class="close-btn" data-modal-id="refModal">&times;</button><h2>Calorie Calculation Reference</h2><p>Calorie calculation in this app is an <strong>estimation</strong> based on the <strong>MET (Metabolic Equivalent of Task)</strong> value.</p><ul><li><strong>Running/Walking:</strong> Approx. <strong>60 kcal per kilometer</strong>.</li><li><strong>Strength Training:</strong> Based on intensity and repetitions.</li><li><strong>Plank:</strong> Based on duration.</li></ul><p><small>Actual values may vary depending on your weight, age, and intensity.</small></p></div></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
