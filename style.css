@@ -1090,3 +1090,26 @@ input:focus-visible {
   /* Menjalankan animasi saat kursor diarahkan ke tombol */
   animation: pulse-glow 1.5s infinite ease-in-out;
 }
+
+/* Penyesuaian untuk Tampilan Mobile */
+@media (max-width: 480px) {
+    /* Mengecilkan kartu 'Remaining' secara keseluruhan */
+    .goal-card.remaining {
+        padding: 1rem;
+        min-height: auto; /* Hapus tinggi minimum agar lebih fleksibel */
+    }
+
+    /* Mengecilkan ukuran font judul, angka, dan sub-judul */
+    .goal-card.remaining h2 {
+        font-size: 1.1rem; /* Sedikit lebih kecil */
+    }
+
+    .goal-card.remaining h1 {
+        font-size: 3rem; /* Jauh lebih kecil agar tidak terlalu dominan */
+        margin: 5px 0; /* Kurangi margin atas dan bawah */
+    }
+    
+    .goal-card.remaining p {
+        font-size: 0.8rem; /* Sedikit lebih kecil */
+    }
+}
