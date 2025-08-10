@@ -158,13 +158,43 @@ class App {
         document.getElementById('athleticTimerDisplay').textContent = '00:00';
 
     }
-    initMap() {
-        if (this.map) return;
-        const mapEl = document.getElementById('map'); if(!mapEl) return;
-        this.map = L.map(mapEl).setView([-6.200000, 106.816666], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(this.map);
-        navigator.geolocation.getCurrentPosition(pos => this.map.setView([pos.coords.latitude, pos.coords.longitude], 16));
-    }
+initMap() {
+    if (this.map) return; // Jangan inisialisasi ulang jika peta sudah ada
+    const mapEl = document.getElementById('map');
+    if (!mapEl) return;
+
+    // Tampilkan pesan loading selagi mencari lokasi
+    mapEl.innerHTML = '<p style="text-align: center; padding-top: 20px; color: var(--text-light);">Mencari lokasi Anda...</p>';
+
+    navigator.geolocation.getCurrentPosition(
+        // --- Success Callback ---
+        (pos) => {
+            // Hapus pesan loading
+            mapEl.innerHTML = ''; 
+
+            const userLocation = [pos.coords.latitude, pos.coords.longitude];
+            
+            // Inisialisasi peta SETELAH lokasi didapatkan
+            this.map = L.map(mapEl).setView(userLocation, 16); // <-- Langsung set ke lokasi pengguna
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(this.map);
+        },
+        // --- Error Callback ---
+        (err) => {
+            console.error(`ERROR(${err.code}): ${err.message}`);
+            // Tampilkan pesan error jika gagal mendapatkan lokasi
+            mapEl.innerHTML = `<p style="text-align: center; padding-top: 20px; color: var(--danger);">Gagal mendapatkan lokasi. Pastikan izin lokasi telah diberikan.</p>`;
+            
+            // Opsional: Tetap tampilkan peta Jakarta jika lokasi gagal didapat
+            // this.map = L.map(mapEl).setView([-6.200000, 106.816666], 13);
+            // L.tileLayer(...).addTo(this.map);
+        },
+        // --- Options ---
+        { enableHighAccuracy: true }
+    );
+}
     startAthleticWorkout() {
         if (!navigator.geolocation) return alert('Geolocation is not supported by this browser.');
         let positions = []; this.athleticSeconds = 0;

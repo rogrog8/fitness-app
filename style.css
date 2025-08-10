@@ -214,7 +214,7 @@ h2 {
    ================================= */
 .secondary-menu .menu-card.calculator-button {
     /* Mengaktifkan kembali border solid */
-    border: 2px solid rgba(255, 255, 255, 0.227); /* Border putih samar */
+    border: 1.7px solid rgba(255, 255, 255, 0.227); /* Border putih samar */
     
     /* Menambahkan box-shadow untuk efek kedalaman */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -277,10 +277,9 @@ h2 {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
-/* Gaya spesifik untuk tombol Kalkulator */
 .food-button {
-   /* Mengaktifkan kembali border solid */
-    border: 2px solid rgba(255, 255, 255, 0.4); /* Border putih samar */
+    /* Mengaktifkan kembali border solid */
+    border: 1.7px solid rgba(255, 255, 255, 0.227); /* Border putih samar */
     
     /* Menambahkan box-shadow untuk efek kedalaman */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
