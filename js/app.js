@@ -170,13 +170,11 @@ initMap() {
     const reloadBtn = document.getElementById('reloadLocationBtn');
     if (!mapEl || !reloadBtn) return;
 
-    // Sembunyikan tombol retry setiap kali inisialisasi dimulai
     reloadBtn.classList.add('hidden');
     mapEl.innerHTML = '<p style="text-align: center; padding-top: 20px; color: var(--text-light);">Mencari lokasi Anda...</p>';
 
     navigator.geolocation.getCurrentPosition(
         (pos) => {
-            // ... (bagian success callback tidak berubah)
             mapEl.innerHTML = ''; 
             const userLocation = [pos.coords.latitude, pos.coords.longitude];
             this.map = L.map(mapEl).setView(userLocation, 16);
@@ -185,14 +183,17 @@ initMap() {
             }).addTo(this.map);
         },
         (err) => {
-            // --- BAGIAN INI DIPERBARUI ---
             console.error(`ERROR(${err.code}): ${err.message}`);
             mapEl.innerHTML = `<p style="text-align: center; padding-top: 20px; color: var(--danger);">Gagal mendapatkan lokasi. Pastikan izin lokasi telah diberikan.</p>`;
-            // Tampilkan tombol retry jika gagal
             reloadBtn.classList.remove('hidden'); 
-            // --- AKHIR BAGIAN YANG DIPERBARUI ---
         },
-        { enableHighAccuracy: true }
+        // --- BAGIAN YANG DIPERBARUI ---
+        { 
+            enableHighAccuracy: true,
+            timeout: 10000, // Beri waktu 10 detik untuk mencari lokasi
+            maximumAge: 0 // Jangan gunakan cache lokasi lama
+        }
+        // --- AKHIR BAGIAN YANG DIPERBARUI ---
     );
 }
     startAthleticWorkout() {
