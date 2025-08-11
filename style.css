@@ -175,8 +175,10 @@ h3 { font-size: 1.1rem; margin-bottom: 15px; }
 }
 
 .actions-and-water-container > .main-actions {
-    flex: 1; /* Biarkan flex: 1 agar lebarnya sama dengan water intake */
+    flex: 1;
     margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .actions-and-water-container > .water-tracker-section {
@@ -195,12 +197,18 @@ h3 { font-size: 1.1rem; margin-bottom: 15px; }
     border: none;
     padding: 0;
     text-align: center;
+    /* Tambahkan flex-grow agar mengisi ruang yang tersedia */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
 }
 
 .action-buttons {
     display: flex;
     flex-direction: column;
     gap: 15px;
+    height: 100%; /* Pastikan container tombol mengisi tinggi yang tersedia */
 }
 
 /* Biarkan aturan untuk .action-btn seperti sebelumnya */
@@ -214,8 +222,9 @@ h3 { font-size: 1.1rem; margin-bottom: 15px; }
     align-items: center;
     cursor: pointer;
     transition: all 0.2s ease;
-    flex-direction: row; /* Pastikan konten di dalam tombol tetap horizontal */
+    flex-direction: row;
     justify-content: flex-start;
+    flex-grow: 1; /* Properti ini akan membuat setiap tombol membagi tinggi secara merata */
 }
 .action-btn:hover { border-color: var(--primary); transform: translateY(-3px); }
 .action-btn .icon { font-size: 1.8rem; }
