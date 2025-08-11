@@ -373,15 +373,16 @@ input, select { width: 100%; padding: 12px; border: 2px solid var(--input-border
    ================================= */
 @media (max-width: 768px) {
   .goal-summary {
-    /* Ubah ini untuk mempertahankan tata letak 4 kolom */
     grid-template-columns: repeat(4, 1fr);
   }
   .goal-card.remaining {
-    /* Hapus ini atau ubah menjadi span 1 */
     grid-column: span 1;
   }
   .dashboard-grid { grid-template-columns: 1fr; }
-  .actions-and-water-container, .weight-tracker-layout { flex-direction: column; }
+  .actions-and-water-container, .weight-tracker-layout {
+    /* Ubah ini menjadi 'row' atau hapus untuk kembali ke tata letak desktop */
+    flex-direction: row;
+  }
   .weight-input-area { border-right: none; padding-right: 0; width: 100%; }
 }
 
