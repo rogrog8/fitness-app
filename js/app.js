@@ -1,7 +1,3 @@
-import { Storage } from './storage.js';
-import { UI } from './ui.js';
-import { foodDatabase as foodDataObject } from './food-db.js';
-
 function debounce(func, delay = 500) {
     let timeout;
     return (...args) => {
@@ -18,12 +14,18 @@ class App {
         this.fitnessDiary = Storage.getFitnessDiary();
         this.userProfile = Storage.getUserProfile() || { dailyGoal: 0 };
         this.today = new Date().toISOString().split('T')[0];
-        this.foodDataArray = Object.entries(foodDataObject).map(([name, details]) => ({ name, ...details }));
-        this.map = null;
-        this.routeLine = null;
-        this.athleticTimerInterval = null;
-        this.athleticSeconds = 0;
-        this.watchId = null;
+        this.foodDataArray = Object.entries(foodDatabase).map(([name, details]) => ({ name, ...details }));
+        
+        this.weightHistory = Storage.getWeightHistory();
+        this.personalRecords = Storage.getPersonalRecords();
+        this.prExercises = {
+            'push-up': 'reps',
+            'sit-up': 'reps',
+            'squat': 'kg',
+            'plank': 'seconds',
+            '5k-run': 'minutes'
+        };
+        
         this.loadEventListeners();
         this.loadInitialData();
     }
@@ -32,33 +34,116 @@ class App {
         // Navigasi
         this.ui.mainMenu.addEventListener('click', (e) => this.navigate(e));
         this.ui.backButtons.forEach(btn => btn.addEventListener('click', () => this.ui.showPage('page-home')));
+        
         // Kalkulator
         document.getElementById('calorie-calculator-form').addEventListener('submit', (e) => this.calculateAndSaveTDEE(e));
+        
         // Makanan
         document.getElementById('food-search').addEventListener('input', (e) => this.handleFoodSearch(e));
         document.getElementById('page-food').addEventListener('click', (e) => this.addFood(e));
+        
         // Workout & Modal
         document.getElementById('strengthBtn').addEventListener('click', () => this.ui.openModal(document.getElementById('strengthModal')));
-        document.getElementById('athleticBtn').addEventListener('click', () => {
-            this.ui.openModal(document.getElementById('athleticModal'));
-            setTimeout(() => this.initMap(), 100);
-        });
         document.getElementById('exerciseRefBtn').addEventListener('click', () => this.ui.openModal(document.getElementById('refModal')));
         document.querySelectorAll('.close-btn').forEach(btn => btn.addEventListener('click', () => this.ui.closeModal(document.getElementById(btn.dataset.modalId))));
         document.getElementById('saveStrengthBtn').addEventListener('click', () => this.saveStrengthWorkout());
-        document.getElementById('startAthleticBtn').addEventListener('click', () => this.startAthleticWorkout());
-        document.getElementById('stopAthleticBtn').addEventListener('click', () => this.stopAthleticWorkout());
+        
+        // Tombol Aksi Baru
+        document.getElementById('weightTrackerBtn').addEventListener('click', () => {
+            this.ui.showPage('page-weight-tracker');
+            this.ui.renderWeightPage(this.weightHistory);
+        });
+        document.getElementById('prTrackerBtn').addEventListener('click', () => {
+            this.ui.showPage('page-pr-tracker');
+            this.ui.renderPRPage(this.personalRecords, this.prExercises);
+        });
+
+        // Form Fitur Baru
+        this.ui.weightForm.addEventListener('submit', (e) => this.saveWeightEntry(e));
+        this.ui.prForm.addEventListener('submit', (e) => this.savePersonalRecord(e));
+        this.ui.prExerciseSelect.addEventListener('change', (e) => {
+            const selectedExercise = e.target.value;
+            this.ui.prUnitEl.textContent = this.prExercises[selectedExercise];
+        });
+
+        // Water Tracker
+        this.ui.addWaterBtn.addEventListener('click', () => this.updateWaterIntake(1));
+        this.ui.subtractWaterBtn.addEventListener('click', () => this.updateWaterIntake(-1));
+
         // Riwayat
         this.ui.historyListEl.addEventListener('click', (e) => this.handleHistoryClick(e));
         this.ui.clearAllBtn.addEventListener('click', () => this.clearAllActivities());
-        document.getElementById('reloadLocationBtn').addEventListener('click', () => this.initMap());
     }
 
-    // --- METODE-METODE APLIKASI ---
     navigate(e) {
         const menuCard = e.target.closest('.menu-card');
-        if (menuCard) { this.ui.showPage(menuCard.dataset.page); }
+        if (!menuCard) return;
+        const pageId = menuCard.dataset.page;
+        this.ui.showPage(pageId);
     }
+    
+    saveWeightEntry(e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        const weightInput = this.ui.weightInput;
+        const weight = parseFloat(weightInput.value);
+
+        if (!weight || weight <= 0) {
+            alert('Please enter a valid weight.');
+            return;
+        }
+        const today = new Date().toISOString().split('T')[0];
+        const todayEntryIndex = this.weightHistory.findIndex(entry => entry.date === today);
+        if (todayEntryIndex > -1) {
+            this.weightHistory[todayEntryIndex].weight = weight;
+        } else {
+            this.weightHistory.push({ date: today, weight: weight });
+        }
+        Storage.saveWeightHistory(this.weightHistory);
+        this.ui.renderWeightPage(this.weightHistory);
+        alert('Weight saved successfully!');
+        weightInput.value = '';
+    }
+
+    savePersonalRecord(e) {
+        e.preventDefault();
+        const exercise = this.ui.prExerciseSelect.value;
+        const value = parseFloat(this.ui.prValueInput.value);
+
+        if (!exercise || !value || value <= 0) {
+            alert('Please fill all fields with valid values.');
+            return;
+        }
+        const currentRecord = this.personalRecords[exercise];
+        if (currentRecord && value <= currentRecord.value && exercise !== '5k-run') {
+            alert(`Your current record is ${currentRecord.value}. Keep trying!`);
+            return;
+        }
+        if (currentRecord && value >= currentRecord.value && exercise === '5k-run') {
+            alert(`Your current record is ${currentRecord.value} minutes. Keep trying!`);
+            return;
+        }
+        this.personalRecords[exercise] = {
+            value: value,
+            date: new Date().toISOString().split('T')[0]
+        };
+        Storage.savePersonalRecords(this.personalRecords);
+        this.ui.renderPRPage(this.personalRecords, this.prExercises);
+        this.ui.prValueInput.value = '';
+        alert('New personal record saved!');
+    }
+    
+    updateWaterIntake(change) {
+        if (!this.fitnessDiary[this.today]) {
+            this.fitnessDiary[this.today] = [];
+        }
+        let currentWater = this.fitnessDiary[this.today].water || 0;
+        currentWater = Math.max(0, currentWater + change);
+        this.fitnessDiary[this.today].water = currentWater;
+        Storage.saveFitnessDiary(this.fitnessDiary);
+        this.ui.renderUI(this.fitnessDiary[this.today], this.userProfile);
+    }
+
     logActivity(logObject) {
         if (!this.fitnessDiary[this.today]) this.fitnessDiary[this.today] = [];
         logObject.id = Date.now();
@@ -73,8 +158,12 @@ class App {
         this.ui.renderUI(this.fitnessDiary[this.today], this.userProfile);
     }
     clearAllActivities() {
-        if (confirm('Are you sure you want to delete all activities for today? This cannot be undone.')) {
+        if (confirm('Are you sure you want to delete all activities?')) {
+            const currentWater = (this.fitnessDiary[this.today] && this.fitnessDiary[this.today].water) || 0;
             this.fitnessDiary[this.today] = [];
+            if (currentWater > 0) {
+                this.fitnessDiary[this.today].water = currentWater;
+            }
             Storage.saveFitnessDiary(this.fitnessDiary);
             this.ui.renderUI(this.fitnessDiary[this.today] || [], this.userProfile);
         }
@@ -82,7 +171,7 @@ class App {
     handleHistoryClick(e) {
         const deleteButton = e.target.closest('.delete-history-btn');
         if (deleteButton) {
-            if (confirm('Are you sure you want to delete this entry?')) { this.deleteLog(deleteButton.dataset.id); }
+            if (confirm('Are you sure?')) { this.deleteLog(deleteButton.dataset.id); }
         }
     }
     calculateAndSaveTDEE(e) {
@@ -96,7 +185,7 @@ class App {
         Storage.saveUserProfile(this.userProfile);
         this.ui.tdeeResultEl.textContent = Math.round(tdee);
         this.ui.calculatorResultEl.classList.remove('hidden');
-        alert(`Your daily calorie goal has been updated to ${Math.round(tdee)} kcal!`);
+        alert(`Daily calorie goal updated to ${Math.round(tdee)} kcal!`);
         this.ui.renderUI(this.fitnessDiary[this.today] || [], this.userProfile);
     }
     handleFoodSearch(e) {
@@ -107,24 +196,27 @@ class App {
     }
     debouncedSearchAPI = debounce(searchTerm => this.searchFoodAPI(searchTerm));
     async searchFoodAPI(searchTerm) {
-        if (searchTerm.length < 3) { this.ui.foodListApiEl.innerHTML = ''; return; }
-        this.ui.foodListApiEl.innerHTML = `<p style="text-align: center; color: var(--text-light);">Searching online...</p>`;
+        if (searchTerm.length < 3) {
+            this.ui.foodListApiEl.innerHTML = '';
+            return;
+        }
+        this.ui.foodListApiEl.innerHTML = `<p style="text-align: center;">Searching...</p>`;
         try {
             const response = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${searchTerm}&search_simple=1&action=process&json=1&page_size=10`);
             const data = await response.json();
             if (data.products && data.products.length > 0) {
                 const formattedFoods = data.products.map(p => ({ name: p.product_name || 'Unknown', calories: p.nutriments['energy-kcal_100g'] || 0, serving: p.quantity || '100g' })).filter(f => f.calories > 0);
                 this.ui.renderApiFoodList(formattedFoods);
-            } else { this.ui.foodListApiEl.innerHTML = `<p style="text-align: center; color: var(--text-light);">No online results found.</p>`; }
-        } catch (error) { console.error('Error fetching food data:', error); this.ui.foodListApiEl.innerHTML = `<p style="text-align: center; color: var(--danger);">Could not connect to online database.</p>`; }
+            } else { this.ui.foodListApiEl.innerHTML = `<p style="text-align: center;">No online results.</p>`; }
+        } catch (error) { console.error('Error fetching food data:', error); this.ui.foodListApiEl.innerHTML = `<p style="text-align: center; color: red;">Could not connect.</p>`; }
     }
     addFood(e) {
         const addBtn = e.target.closest('.add-food-btn');
         if (addBtn) {
             const foodDetails = JSON.parse(addBtn.dataset.foodDetails);
             if (foodDetails) {
-                this.logActivity({ type: 'food', ...foodDetails });
-                alert(`${foodDetails.name} has been added to your log.`);
+                this.logActivity({ type: 'food', name: foodDetails.name, calories: foodDetails.calories, serving: foodDetails.serving });
+                alert(`${foodDetails.name} has been added.`);
                 this.ui.foodSearchEl.value = '';
                 this.ui.renderFoodList(this.foodDataArray.slice(0, 10), 'Common Foods');
                 this.ui.foodListApiEl.innerHTML = '';
@@ -142,102 +234,27 @@ class App {
         this.ui.closeModal(document.getElementById('strengthModal'));
         strengthAmountEl.value = '';
     }
-stopAthleticWorkout() {
-    if(this.watchId) navigator.geolocation.clearWatch(this.watchId); if(this.athleticTimerInterval) clearInterval(this.athleticTimerInterval); this.watchId = null;
-    const distance = parseFloat(document.getElementById('distanceDisplay').textContent) || 0;
-    if (distance === 0 && this.athleticSeconds === 0) { this.ui.closeModal(document.getElementById('athleticModal')); return; }
-    const calories = distance * 60;
-    this.logActivity({ type: 'lari', name: 'Running', amount: distance, duration: this.athleticSeconds, calories });
-    this.ui.closeModal(document.getElementById('athleticModal'));
     
-    this.ui.startAthleticBtn.classList.remove('hidden');
-    this.ui.stopAthleticBtn.classList.add('hidden');
-
-    document.getElementById('distanceDisplay').textContent = '0.00';
-    document.getElementById('athleticTimerDisplay').textContent = '00:00';
-
-    // --- TAMBAHAN UNTUK MERESET PETA ---
-    if (this.map) {
-        this.map.remove(); // Hapus peta dari DOM
-        this.map = null;   // Setel ulang properti map
-        this.routeLine = null; // Setel ulang properti routeLine
-    }
-    // --- AKHIR TAMBAHAN ---
-}
-initMap() {
-    if (this.map) return;
-    const mapEl = document.getElementById('map');
-    const reloadBtn = document.getElementById('reloadLocationBtn');
-    if (!mapEl || !reloadBtn) return;
-
-    reloadBtn.classList.add('hidden');
-    mapEl.innerHTML = '<p style="text-align: center; padding-top: 20px; color: var(--text-light);">Mencari lokasi Anda...</p>';
-
-    navigator.geolocation.getCurrentPosition(
-        (pos) => {
-            mapEl.innerHTML = ''; 
-            const userLocation = [pos.coords.latitude, pos.coords.longitude];
-            this.map = L.map(mapEl).setView(userLocation, 16);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(this.map);
-        },
-        (err) => {
-            console.error(`ERROR(${err.code}): ${err.message}`);
-            mapEl.innerHTML = `<p style="text-align: center; padding-top: 20px; color: var(--danger);">Gagal mendapatkan lokasi. Pastikan izin lokasi telah diberikan.</p>`;
-            reloadBtn.classList.remove('hidden'); 
-        },
-        // --- BAGIAN YANG DIPERBARUI ---
-        { 
-            enableHighAccuracy: true,
-            timeout: 10000, // Beri waktu 10 detik untuk mencari lokasi
-            maximumAge: 0 // Jangan gunakan cache lokasi lama
-        }
-        // --- AKHIR BAGIAN YANG DIPERBARUI ---
-    );
-}
-    startAthleticWorkout() {
-        if (!navigator.geolocation) return alert('Geolocation is not supported by this browser.');
-        let positions = []; this.athleticSeconds = 0;
-        const distanceDisplay = document.getElementById('distanceDisplay'), athleticTimerDisplay = document.getElementById('athleticTimerDisplay');
-        distanceDisplay.textContent = '0.00'; athleticTimerDisplay.textContent = '00:00';
-        if (this.routeLine) this.map.removeLayer(this.routeLine);
-        this.athleticTimerInterval = setInterval(() => { this.athleticSeconds++; athleticTimerDisplay.textContent = this.ui.formatTime(this.athleticSeconds); }, 1000);
-        this.watchId = navigator.geolocation.watchPosition(position => {
-            const { latitude, longitude } = position.coords;
-            positions.push([latitude, longitude]);
-            if (this.routeLine) this.map.removeLayer(this.routeLine);
-            this.routeLine = L.polyline(positions, { color: 'blue' }).addTo(this.map);
-            this.map.fitBounds(this.routeLine.getBounds());
-            if (positions.length > 1) {
-                let distance = 0;
-                for (let i = 0; i < positions.length - 1; i++) { distance += L.latLng(positions[i]).distanceTo(L.latLng(positions[i + 1])); }
-                distanceDisplay.textContent = (distance / 1000).toFixed(2);
-            }
-        }, () => alert('Could not get location.'), { enableHighAccuracy: true });
-
-        // --- PERBAIKAN DI SINI ---
-        // Menggunakan this.ui untuk mengakses elemen DOM
-        this.ui.startAthleticBtn.classList.add('hidden');
-        this.ui.stopAthleticBtn.classList.remove('hidden');
-    }
     loadInitialData() {
         this.ui.currentDateEl.textContent = this.ui.formatDate(this.today);
         this.ui.renderFoodList(this.foodDataArray.slice(0, 10));
-        this.ui.renderUI(this.fitnessDiary[this.today] || [], this.userProfile);
+        
+        const todayData = this.fitnessDiary[this.today] || [];
+        this.ui.renderUI(todayData, this.userProfile);
+        
+        this.ui.populatePRExercises(this.prExercises);
+        this.ui.prUnitEl.textContent = this.prExercises[this.ui.prExerciseSelect.value];
+        
         this.ui.showPage('page-home');
+        // Di dalam fungsi loadInitialData()
+        this.ui.renderFoodList(this.foodDataArray.slice(0, 5));
     }
 }
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(registration => {
-        console.log('Service Worker berhasil didaftarkan:', registration);
-      })
-      .catch(registrationError => {
-        console.log('Pendaftaran Service Worker gagal:', registrationError);
-      });
+    navigator.serviceWorker.register('/sw.js').then(reg => console.log('SW registered.')).catch(err => console.log('SW registration failed:', err));
   });
 }
-// Inisialisasi Aplikasi
+
 const app = new App();

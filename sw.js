@@ -1,21 +1,20 @@
-// Ganti nama cache ke v2 untuk memicu instalasi ulang
-const CACHE_NAME = 'fitdiary-cache-v2'; 
-
+const CACHE_NAME = 'gymgenie-cache-v1'; 
 const URLS_TO_CACHE = [
   '/',
   '/index.html',
   '/style.css',
-  '/manifest.json', // <-- TAMBAHKAN INI
-  '/js/app.js',     // <-- PASTIKAN PATH INI BENAR
+  '/manifest.json',
+  '/js/app.js',
   '/js/ui.js',
   '/js/storage.js',
+  '/js/food-db.js', // <-- Tambahan file baru
   '/images/icon-192x192.png',
   '/images/icon-512x512.png',
+  '/images/fitnes-btn.jpg', // <-- Tambahan file gambar
   
-  // Aset dari luar (CDN) juga harus di-cache
-  'https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap', // <-- TAMBAHKAN INI
-  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
-  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+  // Aset dari luar (CDN)
+  'https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css', // <-- Tambahan
   'https://cdn.jsdelivr.net/npm/chart.js'
 ];
 
@@ -24,9 +23,10 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Cache dibuka, file-file akan ditambahkan');
+        console.log('Service Worker: Caching files');
         return cache.addAll(URLS_TO_CACHE);
       })
+      .then(() => self.skipWaiting()) // Memaksa aktivasi
   );
 });
 
@@ -46,11 +46,11 @@ self.addEventListener('activate', event => {
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.filter(cacheName => {
-          return cacheName.startsWith('fitdiary-cache-') && cacheName !== CACHE_NAME;
+          return cacheName.startsWith('gymgenie-cache-') && cacheName !== CACHE_NAME;
         }).map(cacheName => {
           return caches.delete(cacheName);
         })
       );
-    })
+    }).then(() => self.clients.claim()) // Mengambil kontrol halaman
   );
 });

@@ -6,15 +6,14 @@
     <title>GymGenie | All-in-One Health Hub</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#007bff"/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="dark-theme">
     <div class="glass-container">
         <header class="app-header">
-            <h1></span>GymGenie</h1>
+            <h1>GymGenie</h1>
             <div class="date-display" id="currentDate"></div>
         </header>
 
@@ -24,7 +23,7 @@
                     <button class="menu-card featured glowing-btn" data-page="page-workout">
                         <div class="menu-card-text">
                             <strong>Genie Fitness</strong>
-                            <span>Track your workouts &amp; calories</span>
+                            <span>Track your workouts & calories</span>
                         </div>
                     </button>
                     <div class="secondary-menu">
@@ -47,111 +46,142 @@
             </div>
 
             <div id="page-workout" class="page hidden">
-            <button class="back-btn">← Back to Menu</button>
-            <section class="goal-summary">
-            <div class="goal-card"><h3>Goal</h3><p><span id="calorieGoal">0</span> kcal</p></div>
-            <div class="goal-card"><h3>Food</h3><p>- <span id="caloriesIn">0</span> kcal</p></div>
-            <div class="goal-card"><h3>Exercise <span class="info-icon" id="exerciseRefBtn" title="Calorie burn reference">i</span></h3><p>+ <span id="caloriesOut">0</span> kcal</p></div>
-            <div class="goal-card remaining">
-            <h2 id="remainingLabel">Sisa Kalori</h2>
-            <h1 id="caloriesRemaining">0</h1>
-            <p id="remainingSubtext" class="subtext"></p>
-            </div>
-    </section>
-                <section class="main-actions">
-                    <h2><span class="icon">➕</span> Add Activity</h2>
-                    <div class="action-buttons">
-                        <button id="strengthBtn" class="action-btn">
-                            <span class="icon">🏋️</span>
-                            <div>
-                                <strong>Strength Training</strong>
-                                <span>Add Push-ups, Squats, etc.</span>
-                            </div>
-                        </button>
-                        <button id="athleticBtn" class="action-btn">
-                            <span class="icon">🏃‍♂️</span>
-                            <div>
-                                <strong>Athletic Training</strong>
-                                <span>Track Running & Walking</span>
-                            </div>
-                        </button>
+                <button class="back-btn">← Back to Menu</button>
+                <section class="goal-summary">
+                    <div class="goal-card"><h3>Goal</h3><p><span id="calorieGoal">0</span> kcal</p></div>
+                    <div class="goal-card"><h3>Food</h3><p>- <span id="caloriesIn">0</span> kcal</p></div>
+                    <div class="goal-card"><h3>Exercise <span class="info-icon" id="exerciseRefBtn" title="Calorie burn reference">i</span></h3><p>+ <span id="caloriesOut">0</span> kcal</p></div>
+                    <div class="goal-card remaining">
+                        <h2 id="remainingLabel">Jatah Hari Ini</h2>
+                        <h1 id="caloriesRemaining">0</h1>
+                        <p id="remainingSubtext" class="subtext">Olahraga akan menambah jatah ini</p>
                     </div>
                 </section>
-                <section id="dashboardSection" class="dashboard-grid hidden">
-                    <div class="chart-container">
-                        <div class="chart-wrapper"><canvas id="dailyCalorieChart"></canvas></div>
-                        <div id="chartLegend"></div>
-                    </div>
-                    <div id="historyContainer">
-                        <div class="history-header-wrapper">
-                            <h2><span class="icon">📅</span> Today's History</h2>
-                            <button id="clearAllBtn" class="clear-btn hidden">Clear All</button>
+                <div class="actions-and-water-container">
+                    <section class="main-actions">
+                        <h2><span class="icon">➕</span> Add Activity</h2>
+                        <div class="action-buttons">
+                            <button id="strengthBtn" class="action-btn"><span class="icon">🏋️</span><div><strong>Strength Training</strong><span>Add Push-ups, Squats, etc.</span></div></button>
+                            <button id="weightTrackerBtn" class="action-btn" data-page="page-weight-tracker"><span class="icon">⚖️</span><div><strong>Weight Tracker</strong><span>Log weight & see progress</span></div></button>
+                            <button id="prTrackerBtn" class="action-btn" data-page="page-pr-tracker"><span class="icon">🏆</span><div><strong>Personal Records</strong><span>Log your best achievements</span></div></button>
                         </div>
-                        <div id="historyList"></div>
-                    </div>
+                    </section>
+                    <section class="water-tracker-section">
+                        <h2><span class="icon">💧</span> Water Intake</h2>
+                        <div class="water-tracker">
+                            <div class="water-info"><span id="water-count" class="water-count">0</span><span class="water-target">/ <span id="water-target">8</span> glasses</span></div>
+                            <div id="water-lines-container"></div>
+                            <div class="water-progress-bar"><div id="water-progress" class="water-progress-fill"></div></div>
+                            <div class="water-controls"><button id="subtract-water-btn" class="water-btn">-</button><button id="add-water-btn" class="water-btn">+</button></div>
+                        </div>
+                    </section>
+                </div>
+                <section id="dashboardSection" class="dashboard-grid hidden">
+                    <div class="chart-container"><div class="chart-wrapper"><canvas id="dailyCalorieChart"></canvas></div><div id="chartLegend"></div></div>
+                    <div id="historyContainer"><div class="history-header-wrapper"><h2><span class="icon">📅</span> Today's History</h2>
+                    <button id="clearAllBtn" class="clear-btn hidden"><i class="fas fa-trash-can"></i> Clear All</button>
+            </div><div id="historyList"></div></div>
                 </section>
             </div>
 
             <div id="page-calculator" class="page hidden">
-                <button class="back-btn">← Back to Menu</button>
-                <div class="feature-page">
-                    <h2>Genie Calculator</h2>
-                    <p>Calculate your daily calorie needs (TDEE) to set a personal goal.</p>
-                    <form id="calorie-calculator-form">
-                        <div class="form-group"><label for="gender">Gender</label><select id="gender" name="gender"><option value="male">Male</option><option value="female">Female</option></select></div>
-                        <div class="form-group"><label for="age">Age</label><input type="number" id="age" placeholder="e.g., 25" required></div>
-                        <div class="form-group"><label for="weight">Weight (kg)</label><input type="number" id="weight" placeholder="e.g., 70" required></div>
-                        <div class="form-group"><label for="height">Height (cm)</label><input type="number" id="height" placeholder="e.g., 175" required></div>
-                        <div class="form-group"><label for="activity-level">Activity Level</label><select id="activity-level"><option value="1.2">Sedentary (office job)</option><option value="1.375">Lightly Active (exercise 1-3 days/week)</option><option value="1.55">Moderately Active (exercise 3-5 days/week)</option><option value="1.725">Very Active (exercise 6-7 days/week)</option><option value="1.9">Extremely Active (physical job/training)</option></select></div>
-                        <button type="submit" class="save-btn">Calculate & Save Goal</button>
-                    </form>
-                    <div id="calculator-result" class="hidden">
-                        <h3>Your Daily Goal Is:</h3>
-                        <p class="big-text"><span id="tdee-result">0</span> kcal</p>
-                    </div>
-                </div>
+    <button class="back-btn">← Back to Menu</button>
+    <div class="feature-page">
+        <h2>Genie Calculator</h2>
+        <p>Calculate your daily calorie needs (TDEE) to set a personal goal.</p>
+        <form id="calorie-calculator-form">
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
             </div>
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" placeholder="e.g., 25" required>
+            </div>
+            <div class="form-group">
+                <label for="weight">Weight (kg)</label>
+                <input type="number" id="weight" placeholder="e.g., 70" required>
+            </div>
+            <div class="form-group">
+                <label for="height">Height (cm)</label>
+                <input type="number" id="height" placeholder="e.g., 175" required>
+            </div>
+            <div class="form-group">
+                <label for="activity-level">Activity Level</label>
+                <select id="activity-level">
+                    <option value="1.2">Sedentary (office job)</option>
+                    <option value="1.375">Lightly Active (exercise 1-3 days/week)</option>
+                    <option value="1.55">Moderately Active (exercise 3-5 days/week)</option>
+                    <option value="1.725">Very Active (exercise 6-7 days/week)</option>
+                    <option value="1.9">Extremely Active (physical job/training)</option>
+                </select>
+            </div>
+            <button type="submit" class="save-btn">Calculate & Save Goal</button>
+        </form>
+        <div id="calculator-result" class="hidden">
+            <h3>Your Daily Goal Is:</h3>
+            <p class="big-text"><span id="tdee-result">0</span> kcal</p>
+        </div>
+    </div>
+</div>
 
             <div id="page-food" class="page hidden">
                 <button class="back-btn">← Back to Menu</button>
                 <div class="feature-page">
                     <h2>Genie Log Food</h2>
-                    <p>Find food in our list or search our global database.</p>
-                    <div class="form-group"><input type="search" id="food-search" placeholder="Search for food..."></div>
+                    <input type="search" id="food-search" placeholder="Search for food...">
                     <div class="search-results">
                         <div id="food-list-local"></div>
                         <div id="food-list-api"></div>
                     </div>
                 </div>
             </div>
+
+            <div id="page-weight-tracker" class="page hidden">
+                <button class="back-btn">← Back to Menu</button>
+                <div class="feature-page weight-tracker-layout">
+                    <div class="weight-input-area">
+                        <h2>Weight Tracker</h2>
+                        <form id="weight-form" class="weight-form-inline">
+                            <div class="form-group"><label for="weight-input">Today's Weight (kg)</label><input type="number" id="weight-input" step="0.1" required></div>
+                            <button type="submit" class="save-btn">Save Weight</button>
+                        </form>
+                    </div>
+                    <div class="chart-container"><h3>Progress Chart</h3><div class="chart-wrapper"><canvas id="weightChart"></canvas></div></div>
+                    <div class="weight-history-container"><h3>Weight History</h3><div id="weight-history-list"></div></div>
+                </div>
+            </div>
+
+            <div id="page-pr-tracker" class="page hidden">
+                <button class="back-btn">← Back to Menu</button>
+                <div class="feature-page">
+                    <h2>Personal Records</h2>
+                    <form id="pr-form">
+                        <h3>Add New Record</h3>
+                        <div class="form-group"><label for="pr-exercise">Select Exercise</label><select id="pr-exercise" required></select></div>
+                        <div class="pr-input-group">
+                            <div class="form-group"><label for="pr-value">Your Record</label><input type="number" id="pr-value" step="0.1" required></div>
+                            <span id="pr-unit" class="pr-unit-label">reps</span>
+                        </div>
+                        <button type="submit" class="save-btn">Save New Record</button>
+                    </form>
+                    <div id="pr-list-container" style="margin-top: 30px;"><h3>Your Current Records</h3><div id="pr-list"></div></div>
+                </div>
+            </div>
         </main>
     </div>
 
     <div id="strengthModal" class="modal-overlay hidden"><div class="modal-content"><button class="close-btn" data-modal-id="strengthModal">&times;</button><h2>Add Strength Workout</h2><select id="strengthType"><option value="push-up">Push-Up</option><option value="sit-up">Sit-Up</option><option value="squat">Squat</option><option value="plank">Plank</option></select><div class="input-group"><label for="strengthAmount">Amount (reps/seconds)</label><input type="number" id="strengthAmount" placeholder="e.g., 20"></div><button id="saveStrengthBtn" class="save-btn">Save</button></div></div>
-    <div id="athleticModal" class="modal-overlay hidden">
-    <div class="modal-content">
-        <button class="close-btn" data-modal-id="athleticModal">&times;</button>
-        <h2>Start Athletic Workout</h2>
-        <p>The application will ask for permission to access your location.</p>
-        <div id="map" style="height: 200px; width: 100%; margin-bottom: 15px; border-radius: 10px;"></div>
-        
-        <button id="reloadLocationBtn" class="save-btn hidden" style="background-color: #f39c12; margin-top: -10px; margin-bottom: 10px;">
-            <i class="fas fa-sync-alt"></i> Retry Location
-        </button>
-        
-        <div class="athletic-stats">
-            <div><strong>Distance:</strong> <span id="distanceDisplay">0.00</span> km</div>
-            <div><strong>Time:</strong> <span id="athleticTimerDisplay">00:00</span></div>
-        </div>
-        <button id="startAthleticBtn" class="save-btn">Start Running</button>
-        <button id="stopAthleticBtn" class="save-btn hidden" style="background-color: var(--primary-dark);">Finish & Save</button>
-    </div>
-    </div>
-    <div id="refModal" class="modal-overlay hidden"><div class="modal-content"><button class="close-btn" data-modal-id="refModal">&times;</button><h2>Calorie Calculation Reference</h2><p>Calorie calculation in this app is an <strong>estimation</strong> based on the <strong>MET (Metabolic Equivalent of Task)</strong> value.</p><ul><li><strong>Running/Walking:</strong> Approx. <strong>60 kcal per kilometer</strong>.</li><li><strong>Strength Training:</strong> Based on intensity and repetitions.</li><li><strong>Plank:</strong> Based on duration.</li></ul><p><small>Actual values may vary depending on your weight, age, and intensity.</small></p></div></div>
+    
+    <div id="refModal" class="modal-overlay hidden"><div class="modal-content"><button class="close-btn" data-modal-id="refModal">&times;</button><h2>Calorie Calculation Reference</h2><ul><li><strong>Strength Training:</strong> Based on intensity and repetitions.</li></ul></div></div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="js/app.js" type="module"></script>
-
+    <script src="js/storage.js" defer></script>
+    <script src="js/ui.js" defer></script>
+    <script src="js/food-db.js" defer></script>
+    <script src="js/app.js" defer></script>
 </body>
 </html>

@@ -1,83 +1,114 @@
-export class UI {
+class UI {
     constructor() {
         // Pemilihan semua elemen DOM
         this.pages = document.querySelectorAll('.page');
         this.mainMenu = document.querySelector('.main-menu');
         this.backButtons = document.querySelectorAll('.back-btn');
         this.currentDateEl = document.getElementById('currentDate');
+        
+        // Elemen Kalori & Riwayat
         this.calorieGoalEl = document.getElementById('calorieGoal');
         this.caloriesInEl = document.getElementById('caloriesIn');
         this.caloriesOutEl = document.getElementById('caloriesOut');
         this.caloriesRemainingEl = document.getElementById('caloriesRemaining');
+        this.remainingLabelEl = document.getElementById('remainingLabel');
+        this.remainingSubtextEl = document.getElementById('remainingSubtext');
         this.dashboardSection = document.getElementById('dashboardSection');
         this.historyListEl = document.getElementById('historyList');
         this.dailyChartCanvas = document.getElementById('dailyCalorieChart');
         this.chartLegendEl = document.getElementById('chartLegend');
+        this.clearAllBtn = document.getElementById('clearAllBtn');
+        
+        // Elemen Makanan
         this.foodListLocalEl = document.getElementById('food-list-local');
         this.foodListApiEl = document.getElementById('food-list-api');
+        this.foodSearchEl = document.getElementById('food-search');
+
+        // Elemen Kalkulator
         this.tdeeResultEl = document.getElementById('tdee-result');
         this.calculatorResultEl = document.getElementById('calculator-result');
-        this.foodSearchEl = document.getElementById('food-search');
-        this.clearAllBtn = document.getElementById('clearAllBtn');
-        this.startAthleticBtn = document.getElementById('startAthleticBtn');
-        this.stopAthleticBtn = document.getElementById('stopAthleticBtn');
+        
+        // Elemen Weight Tracker
+        this.weightChartCanvas = document.getElementById('weightChart');
+        this.weightHistoryListEl = document.getElementById('weight-history-list');
+        this.weightForm = document.getElementById('weight-form');
+        this.weightInput = document.getElementById('weight-input');
+        
+        // Elemen PR Tracker
+        this.prForm = document.getElementById('pr-form');
+        this.prExerciseSelect = document.getElementById('pr-exercise');
+        this.prValueInput = document.getElementById('pr-value');
+        this.prUnitEl = document.getElementById('pr-unit');
+        this.prListEl = document.getElementById('pr-list');
+        
+        // Elemen Water Tracker
+        this.waterCountEl = document.getElementById('water-count');
+        this.waterTargetEl = document.getElementById('water-target');
+        this.waterProgressEl = document.getElementById('water-progress');
+        this.addWaterBtn = document.getElementById('add-water-btn');
+        this.subtractWaterBtn = document.getElementById('subtract-water-btn');
+        this.waterLinesContainer = document.getElementById('water-lines-container');
 
-        // --- Elemen baru untuk UI dinamis ---
-        this.remainingLabelEl = document.getElementById('remainingLabel');
-        this.remainingSubtextEl = document.getElementById('remainingSubtext');
-        // --- Akhir elemen baru ---
-
+        // Properti Chart
         this.dailyChart = null;
+        this.weightChart = null;
         this.calorieColors = ['#FF6B35', '#E05725', '#2D3436', '#FFD1B3', '#636E72', '#B2BEC3'];
     }
 
-    showPage(pageIdToShow) {
-        this.pages.forEach(page => {
-            page.id === pageIdToShow ? page.classList.remove('hidden') : page.classList.add('hidden');
-        });
-    }
+showPage(pageIdToShow) {
+    this.pages.forEach(page => {
+        if (page.id === pageIdToShow) {
+            page.classList.remove('hidden');
+        } else {
+            page.classList.add('hidden');
+        }
+    });
+}
 
-    openModal(modal) { modal.classList.remove('hidden'); }
-    closeModal(modal) { modal.classList.add('hidden'); }
+    openModal(modal) { if(modal) modal.classList.remove('hidden'); }
+    closeModal(modal) { if(modal) modal.classList.add('hidden'); }
 
     renderUI(todayData, userProfile) {
-        let totalCaloriesIn = 0, totalCaloriesOut = 0;
-        const exerciseData = [];
-        
         const data = todayData || [];
-        data.sort((a, b) => b.id - a.id);
+        let totalCaloriesIn = 0;
+        let totalCaloriesOut = 0;
+        const exerciseData = [];
 
         data.forEach(item => {
             if (item.type === 'food') {
                 totalCaloriesIn += item.calories;
-            } else if (['push-up', 'sit-up', 'squat', 'plank', 'lari'].includes(item.type)) {
+            } else if (item.calories) {
                 totalCaloriesOut += item.calories;
                 exerciseData.push(item);
             }
         });
-        
-        // --- Menggunakan Logika #1: Anggaran Fleksibel ---
-        const remaining = (userProfile.dailyGoal || 0) - totalCaloriesIn + totalCaloriesOut;
 
-        // --- Bagian yang diperbarui untuk menampilkan data & UI dinamis ---
+        const waterIntake = todayData ? (todayData.water || 0) : 0;
+        this.renderWaterTracker(waterIntake, 8);
+
+        const remaining = (userProfile.dailyGoal || 0) - totalCaloriesIn + totalCaloriesOut;
         this.calorieGoalEl.textContent = Math.round(userProfile.dailyGoal || 0);
         this.caloriesInEl.textContent = Math.round(totalCaloriesIn);
         this.caloriesOutEl.textContent = Math.round(totalCaloriesOut);
         
-        // Mengatur UI dinamis untuk "Remaining" berdasarkan Logika #1
-        this.remainingLabelEl.textContent = 'Today Calorie Remaining';
+        this.remainingLabelEl.textContent = 'Jatah Hari Ini';
         this.caloriesRemainingEl.textContent = Math.round(remaining);
-        this.remainingSubtextEl.textContent = 'Exercise Will Increase Your Calorie Allowance';
-        this.remainingSubtextEl.style.color = '#FFFFFF'; // Mengatur warna menjadi putih
-        // --- Akhir bagian yang diperbarui ---
-        
-        if (data.length > 0) {
+        this.remainingSubtextEl.textContent = 'Olahraga akan menambah jatah ini';
+        this.remainingSubtextEl.style.color = '#FFFFFF';
+
+        if (data.length > 0 || waterIntake > 0) {
             this.dashboardSection.classList.remove('hidden');
-            this.clearAllBtn.classList.remove('hidden');
-            this.historyListEl.innerHTML = '';
-            data.forEach(item => this.renderHistoryItem(item));
             
-            const chartLabels = exerciseData.map(item => item.type.replace('-', ' '));
+            if (data.length > 0) {
+                this.clearAllBtn.classList.remove('hidden');
+                this.historyListEl.innerHTML = '';
+                data.sort((a, b) => b.id - a.id).forEach(item => this.renderHistoryItem(item));
+            } else {
+                this.clearAllBtn.classList.add('hidden');
+                this.historyListEl.innerHTML = '<p>No activities logged for today.</p>';
+            }
+            
+            const chartLabels = exerciseData.map(item => item.name);
             const chartData = exerciseData.map(item => Math.round(item.calories));
             if (exerciseData.length > 0) {
                 this.renderOrUpdateChart(chartLabels, chartData);
@@ -88,6 +119,7 @@ export class UI {
         } else {
             this.dashboardSection.classList.add('hidden');
             this.clearAllBtn.classList.add('hidden');
+            this.historyListEl.innerHTML = '<p>No activities logged for today.</p>';
         }
     }
 
@@ -95,6 +127,7 @@ export class UI {
         const historyItem = document.createElement('div');
         historyItem.className = 'history-item';
         let icon = '❓', detailsHTML = '', calorieDisplay = '';
+        const name = item.name || item.type.replace('-', ' ');
 
         switch(item.type) {
             case 'food':
@@ -102,11 +135,7 @@ export class UI {
                 detailsHTML = `Serving: ${item.serving}`;
                 calorieDisplay = `<span>-${Math.round(item.calories)} kcal</span>`;
                 break;
-            case 'stress':
-                icon = '🧘';
-                detailsHTML = `Stress level recorded: ${item.level}`;
-                break;
-            default: // Olahraga
+            default:
                 icon = '💪';
                 detailsHTML = `Amount: ${item.amount.toFixed(item.type === 'lari' ? 2 : 0)} ${this.getUnit(item.type)}`;
                 if (item.duration) detailsHTML += ` &middot; Time: ${this.formatTime(item.duration)}`;
@@ -117,7 +146,7 @@ export class UI {
         historyItem.innerHTML = `
             <div class="history-item-details-container">
                 <div class="history-item-header">
-                    <span style="text-transform: capitalize;">${icon} ${item.name || item.type.replace('-', ' ')}</span>
+                    <span style="text-transform: capitalize;">${icon} ${name}</span>
                     ${calorieDisplay}
                 </div>
                 <div class="history-item-details">${detailsHTML}</div>
@@ -126,18 +155,11 @@ export class UI {
         `;
         this.historyListEl.appendChild(historyItem);
     }
-
-    renderFoodList(foods, title = null) {
+    
+    renderFoodList(foods, title = "Common Foods") {
         const container = this.foodListLocalEl;
-        container.innerHTML = '';
-        if (!foods || foods.length === 0) {
-            if(title) container.innerHTML = `<h3 class="results-heading">${title}</h3>`;
-            return;
-        };
-
-        if (title) {
-            container.innerHTML = `<h3 class="results-heading">${title}</h3>`;
-        }
+        container.innerHTML = `<h3 class="results-heading">${title}</h3>`;
+        if (!foods || foods.length === 0) return;
         foods.forEach(food => {
             const foodItem = document.createElement('div');
             foodItem.className = 'food-item';
@@ -145,38 +167,124 @@ export class UI {
             container.appendChild(foodItem);
         });
     }
+    // Letakkan fungsi ini di dalam class UI di file ui.js
+// Misalnya, di bawah fungsi renderFoodList
 
-    renderApiFoodList(foods) {
-        const container = this.foodListApiEl;
-        container.innerHTML = '';
-        if (!foods || foods.length === 0) {
-            container.innerHTML = `<p style="text-align: center; color: var(--text-light);">No online results found.</p>`;
-            return;
-        }
-        container.innerHTML = `<h3 class="results-heading">Online Results</h3>`;
-        foods.forEach(food => {
-            const foodItem = document.createElement('div');
-            foodItem.className = 'food-item';
-            foodItem.innerHTML = `<div class="food-item-info"><strong style="text-transform: capitalize;">${food.name}</strong><span>${Math.round(food.calories)} kcal per ${food.serving}</span></div><button class="add-food-btn" data-food-details='${JSON.stringify(food)}'>+</button>`;
-            container.appendChild(foodItem);
-        });
+renderApiFoodList(foods) {
+    const container = this.foodListApiEl;
+    container.innerHTML = '<h3 class="results-heading">Online Results</h3>';
+
+    if (!foods || foods.length === 0) {
+        container.innerHTML += '<p style="text-align: center; color: var(--text-light);">No online results found.</p>';
+        return;
     }
+
+    foods.forEach(food => {
+        const foodItem = document.createElement('div');
+        foodItem.className = 'food-item';
+        // Menggunakan JSON.stringify untuk data-food-details
+        const foodDetails = JSON.stringify({
+            name: food.name,
+            calories: food.calories,
+            serving: food.serving,
+            type: 'food'
+        });
+        foodItem.innerHTML = `<div class="food-item-info"><strong style="text-transform: capitalize;">${food.name}</strong><span>${Math.round(food.calories)} kcal per ${food.serving}</span></div><button class="add-food-btn" data-food-details='${foodDetails}'>+</button>`;
+        container.appendChild(foodItem);
+    });
+}
 
     renderOrUpdateChart(labels, data) {
         if (this.dailyChart) this.dailyChart.destroy();
-        this.dailyChart = new Chart(this.dailyChartCanvas, { type: 'pie', data: { labels: labels, datasets: [{ label: 'Calories Burned', data: data, backgroundColor: this.calorieColors, borderColor: '#FFFFFF', borderWidth: 2, hoverOffset: 8 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { enabled: true } } } });
+        this.dailyChart = new Chart(this.dailyChartCanvas, { type: 'pie', data: { labels: labels, datasets: [{ data: data, backgroundColor: this.calorieColors }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+        
         let legendHTML = '';
-        if (this.dailyChart && this.dailyChart.data.labels.length > 0) {
-            this.dailyChart.data.labels.forEach((label, i) => {
-                const value = this.dailyChart.data.datasets[0].data[i];
-                const color = this.calorieColors[i % this.calorieColors.length];
-                legendHTML += `<div class="legend-item"><div class="legend-label"><span class="legend-color" style="background-color: ${color};"></span>${label}</div><span class="legend-value">${value} kcal</span></div>`;
-            });
-        }
+        labels.forEach((label, i) => {
+            legendHTML += `<div class="legend-item"><div class="legend-label"><span class="legend-color" style="background-color: ${this.calorieColors[i % this.calorieColors.length]};"></span><span style="text-transform: capitalize;">${label}</span></div><span class="legend-value">${data[i]} kcal</span></div>`;
+        });
         this.chartLegendEl.innerHTML = legendHTML;
     }
-    
-    formatDate(dateString) { const date = new Date(dateString + 'T00:00:00'); const options = { weekday: 'long', day: 'numeric', month: 'long' }; return date.toLocaleDateString('en-US', options); }
+
+    renderWeightPage(history) {
+        this.weightHistoryListEl.innerHTML = '';
+        if (history.length === 0) {
+            this.weightHistoryListEl.innerHTML = '<p>No weight history yet.</p>';
+            if (this.weightChart) this.weightChart.destroy();
+            return;
+        }
+
+        history.sort((a, b) => new Date(b.date) - new Date(a.date));
+        history.forEach(entry => {
+            const item = document.createElement('div');
+            item.className = 'history-item';
+            const entryDate = new Date(entry.date).toLocaleDateString('en-GB');
+            item.innerHTML = `<div class="history-item-header"><span>⚖️ ${entryDate}</span><span>${entry.weight} kg</span></div>`;
+            this.weightHistoryListEl.appendChild(item);
+        });
+
+        if (this.weightChart) this.weightChart.destroy();
+        const chartData = [...history].sort((a, b) => new Date(a.date) - new Date(b.date));
+        const labels = chartData.map(entry => new Date(entry.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }));
+        const data = chartData.map(entry => entry.weight);
+        
+        this.weightChart = new Chart(this.weightChartCanvas, {
+            type: 'line',
+            data: { labels: labels, datasets: [{ label: 'Weight (kg)', data: data, borderColor: 'var(--primary)', fill: true, tension: 0.1, pointRadius: 5, pointHoverRadius: 7, pointBackgroundColor: 'var(--primary)' }] },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: false } }, plugins: { legend: { display: false } } }
+        });
+    }
+
+    populatePRExercises(exercises) {
+        this.prExerciseSelect.innerHTML = '';
+        for (const key in exercises) {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = key.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            this.prExerciseSelect.appendChild(option);
+        }
+    }
+
+    renderPRPage(records, exercises) {
+        this.prListEl.innerHTML = '';
+        if (Object.keys(records).length === 0) {
+            this.prListEl.innerHTML = '<p>No personal records yet. Add your first one!</p>';
+            return;
+        }
+        for (const key in records) {
+            const record = records[key];
+            const exerciseName = key.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            const unit = exercises[key] || '';
+            const recordDate = new Date(record.date).toLocaleDateString('en-GB');
+            const item = document.createElement('div');
+            item.className = 'pr-item';
+            item.innerHTML = `<div class="pr-item-icon">🏆</div><div class="pr-item-details"><strong>${exerciseName}</strong><span>${record.value} ${unit}</span></div><div class="pr-item-date">${recordDate}</div>`;
+            this.prListEl.appendChild(item);
+        }
+    }
+
+    renderWaterTracker(current, target) {
+        if (!this.waterCountEl) return;
+        const count = current || 0;
+        const targetCount = target || 8;
+
+        this.waterCountEl.textContent = count;
+        this.waterTargetEl.textContent = targetCount;
+        const percentage = Math.min((count / targetCount) * 100, 100);
+        this.waterProgressEl.style.width = `${percentage}%`;
+
+        if (this.waterLinesContainer) {
+            this.waterLinesContainer.innerHTML = '';
+            const colors = ['#3498db', '#2ecc71', '#f1c40f', '#e67e22', '#e74c3c', '#9b59b6', '#1abc9c', '#34495e'];
+            for (let i = 0; i < count; i++) {
+                const line = document.createElement('div');
+                line.className = 'water-line';
+                line.style.backgroundColor = colors[i % colors.length];
+                this.waterLinesContainer.appendChild(line);
+            }
+        }
+    }
+
+    formatDate(dateString) { return new Date(dateString + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long' }); }
     formatTime(totalSeconds) { const mins = Math.floor(totalSeconds / 60); const secs = totalSeconds % 60; return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`; }
-    getUnit(exercise) { if (['lari', 'running'].includes(exercise)) return 'km'; if (exercise === 'plank') return 'seconds'; return 'reps'; }
+    getUnit(exercise) { if (exercise === 'plank') return 'seconds'; return 'reps'; }
 }

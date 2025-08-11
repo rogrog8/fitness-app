@@ -1,4 +1,5 @@
-export const foodDatabase = {
+
+const foodDatabase = {
   // Carbohydrates
   "white rice": { calories: 130, serving: "100 grams", protein: 2.7, fat: 0.3, carbs: 28.2 },
   "brown rice": { calories: 111, serving: "100 grams", protein: 2.6, fat: 0.9, carbs: 23 },

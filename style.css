@@ -1,10 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@800;900&family=Poppins:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap');
+
+
 /* =================================
-   THEME VARIABLES & INTEGRATION
+    VARIABEL TEMA
    ================================= */
-/* Tema Terang (Default - Milik Anda) */
 :root {
-  --font-family-heading: 'Nunito', sans-serif; /* <-- UBAH NILAI INI */
+  --font-family-heading: 'Nunito', sans-serif;
   --primary: #FF6B35;
   --primary-dark: #E05725;
   --glass: rgba(255, 255, 255, 0.4);
@@ -20,7 +21,6 @@
   --input-border: #eee;
 }
 
-/* Tema Gelap (Integrasi - Tambahkan class="dark-theme" pada <body>) */
 body.dark-theme {
   --primary: #FF6B35;
   --primary-dark: #ff8552;
@@ -38,29 +38,14 @@ body.dark-theme {
 }
 
 /* =================================
-   Gaya Font Judul Kustom
+    1. GAYA DASAR & RESET
    ================================= */
-/* Gaya Judul dengan Nunito */
-h1, h2, h3,
-.menu-card.featured .menu-card-text strong,
-.secondary-menu .menu-card-text strong {
-  font-family: var(--font-family-heading);
-  font-weight: 800; /* Gunakan ketebalan Extra-Bold */
-  /* text-transform: uppercase;  <-- Baris ini bisa dihapus jika Anda tidak ingin judulnya kapital semua */
-  /* letter-spacing: 1px; <-- Baris ini juga bisa dihapus karena Nunito sudah memiliki jarak yang baik */
-}
-
-/* =================================
-   1. Reset & Gaya Dasar
-   ================================= */
-*,
-*::before,
-*::after {
+*, *::before, *::after {
   box-sizing: border-box;
 }
 
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Nunito', sans-serif;
   background: var(--bg-gradient);
   margin: 0;
   padding: 15px;
@@ -81,55 +66,23 @@ body {
   border: 1px solid var(--border);
 }
 
-h2 {
-  font-size: 1.3rem;
-  margin-bottom: 15px;
-  color: var(--text);
-}
-
-.hidden {
-  display: none !important;
-}
+h2 { font-size: 1.3rem; margin-bottom: 15px; color: var(--text); }
+h3 { font-size: 1.1rem; margin-bottom: 15px; }
+.hidden { display: none !important; }
 
 /* =================================
-   2. Komponen & Halaman
+    2. KOMPONEN & HALAMAN UTAMA
    ================================= */
-
-/* Header */
 .app-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 25px;
 }
+.app-header h1 { margin: 0; font-size: 1.6rem; color: var(--primary); }
+.date-display { font-weight: 600; font-size: 0.85rem; }
 
-.app-header h1 {
-  margin: 0;
-  font-size: 1.6rem;
-  color: var(--primary);
-}
-
-.date-display {
-  font-weight: 600;
-  font-size: 0.85rem;
-}
-
-/* Kontrol Halaman */
-.page.hidden {
-  display: none;
-}
-
-.page.active {
-  display: block;
-}
-
-/* Menu Utama */
-.main-menu {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-top: 20px;
-}
+.main-menu { display: flex; flex-direction: column; gap: 20px; margin-top: 20px; }
 
 .menu-card {
   background: var(--card-bg);
@@ -141,975 +94,302 @@ h2 {
   width: 100%;
   font-family: 'Poppins', sans-serif;
 }
+.menu-card:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: var(--shadow); }
 
-.menu-card:hover {
-  border-color: var(--primary);
-  transform: translateY(-4px);
-  box-shadow: var(--shadow);
-}
-
-/* Gaya untuk tombol Genie Fitness */
 .menu-card.featured {
-    /* Mengaktifkan kembali border solid */
-    border: 2px solid rgba(255, 255, 255, 0.4); /* Border putih samar */
-    
-    /* Menambahkan box-shadow untuk efek kedalaman */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-
-    /* Menambahkan transisi yang lebih halus untuk semua properti */
-    transition: all 0.3s ease-in-out;
-    
-    border-radius: 15px;
-    padding: 0;
-    cursor: pointer;
-    text-align: left;
-    width: 100%;
     min-height: 150px;
-    
-    /* Tambahkan gambar sebagai latar belakang */
     background-image: url('images/fitnes-btn.jpg');
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
-    
     position: relative;
     overflow: hidden;
-    
     display: flex;
     align-items: flex-start;
 }
+.menu-card.featured::before { content: ''; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); z-index: 1; }
+.menu-card.featured .menu-card-text { position: relative; z-index: 2; color: white; padding: 25px; }
 
-/* Pseudo-element untuk overlay gelap samar */
-.menu-card.featured::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(5px);
-    border-radius: 15px;
-    z-index: 1;
-}
-/* Gaya untuk teks di dalam tombol */
-.menu-card.featured .menu-card-text {
-    position: relative;
-    z-index: 2;
-    color: white;
-    padding: 25px;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Gaya hover untuk tombol */
-.menu-card.featured:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-    /* Karena border dihilangkan, efek hover sekarang hanya mengubah bayangan */
-}
-
-/* =================================
-    Gaya spesifik untuk tombol Kalkulator
-   ================================= */
-.secondary-menu .menu-card.calculator-button {
-    /* Mengaktifkan kembali border solid */
-    border: 1.7px solid rgba(255, 255, 255, 0.227); /* Border putih samar */
-    
-    /* Menambahkan box-shadow untuk efek kedalaman */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-
-    /* Menambahkan transisi yang lebih halus untuk semua properti */
-    transition: all 0.3s ease-in-out;
-    
-    border-radius: 15px;
-    padding: 0;
-    cursor: pointer;
-    text-align: center;
-    width: 100%;
-    min-height: 150px;
-
-    /* Tambahkan gambar sebagai latar belakang */
-    background-image: url('images/calculator.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    
-    position: relative;
-    overflow: hidden;
-    
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Pseudo-element untuk overlay gelap samar */
-.secondary-menu .menu-card.calculator-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(3px);
-    border-radius: 15px;
-    z-index: 1;
-}
-
-/* Gaya untuk teks dan ikon di dalam tombol */
-.secondary-menu .menu-card.calculator-button .menu-card-text,
-.secondary-menu .menu-card.calculator-button .icon {
-    position: relative;
-    z-index: 2;
-    color: white; /* Ubah warna teks dan ikon menjadi putih */
-}
-.secondary-menu .menu-card .menu-card-text strong {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--primary); /* Selektor yang lebih spesifik */
-}
-
-/* Efek hover yang diperhalus */
-.secondary-menu .menu-card.calculator-button:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-}
-
-.food-button {
-    /* Mengaktifkan kembali border solid */
-    border: 1.7px solid rgba(255, 255, 255, 0.227); /* Border putih samar */
-    
-    /* Menambahkan box-shadow untuk efek kedalaman */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-
-    /* Menambahkan transisi yang lebih halus untuk semua properti */
-    transition: all 0.3s ease-in-out;
-    
-    border-radius: 15px;
-    padding: 0;
-    cursor: pointer;
-    text-align: center;
-    width: 100%;
-    min-height: 150px;
-
-    /* Tambahkan gambar sebagai latar belakang */
-    background-image: url('images/food.jpg'); /* <-- Sesuaikan nama file */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    
-    position: relative;
-    overflow: hidden;
-    
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Pseudo-element untuk overlay gelap samar */
-.food-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(3px);
-    border-radius: 15px;
-    z-index: 1;
-}
-
-/* Gaya untuk teks dan ikon di dalam tombol */
-.food-button .menu-card-text,
-.food-button .icon {
-    position: relative;
-    z-index: 2;
-    color: white; /* Ubah warna teks dan ikon menjadi putih */
-}
-
-/* Efek hover yang diperhalus */
-.food-button:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-}
-
-.menu-card.featured .icon {
-  font-size: 3rem;
-  color: var(--primary);
-}
-
-.menu-card.featured .menu-card-text strong {
-  font-size: 1.2rem;
-  color: var(--text);
-  display: block;
-}
-
-.menu-card.featured .menu-card-text span {
-  font-size: 0.9rem;
-  color: var(--text-light);
-}
-
+.secondary-menu { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
 .secondary-menu {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr 1fr; /* Tetap 2 kolom */
   gap: 15px;
 }
 
+/* Aturan baru untuk membuat tombol di dalamnya lebih baik */
 .secondary-menu .menu-card {
-  border-color: var(--light-gray);
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
+  min-height: 120px; /* Samakan tinggi minimal */
+  padding: 20px;
+  justify-content: center; /* Pusatkan konten */
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  text-align: center;
-  min-height: 100px;
-}
-
-.secondary-menu .icon {
-  font-size: 1.8rem;
-  color: var(--primary);
 }
 
 .secondary-menu .menu-card-text strong {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text);
+  font-size: 1rem; /* Perbesar sedikit font-nya */
 }
 
-/* Panduan Pengguna */
-.how-to-guide {
-  margin-top: 30px;
-  padding: 20px;
-  background-color: var(--card-bg);
-  border-radius: 15px;
-  border: 1px solid var(--border);
-}
-
+.how-to-guide { margin-top: 30px; padding: 20px; background-color: var(--card-bg); border-radius: 15px; border: 1px solid var(--border); }
+.how-to-guide h2 { margin-top: 0; color: var(--primary); }
+.how-to-guide ol { padding-left: 35px; margin: 0; }
 .how-to-guide h2 {
-  margin-top: 0;
-  margin-bottom: 15px;
-  text-align: center;
-  font-size: 1rem; /* Diperkecil agar lebih proporsional */
-  font-weight: 700;
-  color: var(--primary);
-}
-
-.how-to-guide ol {
-  padding-left: 25px;
-  margin: 0;
-  list-style: none;
-  counter-reset: guide-counter;
+    font-size: 1.1rem; /* Perkecil ukuran judul dari 1.3rem */
+    font-weight: 700;
 }
 
 .how-to-guide li {
-  counter-increment: guide-counter;
-  margin-bottom: 12px;
-  color: var(--text-light);
-  font-size: 0.9rem;
-  position: relative;
+    font-size: 0.85rem; /* Perkecil ukuran teks di dalam daftar */
+    margin-bottom: 10px; /* Sedikit kurangi jarak antar list */
 }
 
-.how-to-guide li:last-child {
-  margin-bottom: 0;
-}
+.back-btn { background: var(--light-gray); color: var(--text); border: none; padding: 8px 15px; border-radius: 20px; font-weight: 600; cursor: pointer; margin-bottom: 20px; }
+.back-btn:hover { background: var(--primary); color: white; }
 
-.how-to-guide li::before {
-  content: counter(guide-counter);
-  background-color: var(--primary);
-  color: white;
-  font-weight: 700;
-  font-size: 0.8rem;
-  border-radius: 50%;
-  width: 22px;
-  height: 22px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  left: -35px;
-  top: 0;
-}
-
-.how-to-guide strong {
-  color: var(--text);
-  font-weight: 600;
-}
-
-.back-btn {
-  background: var(--light-gray);
-  color: var(--text);
-  border: none;
-  padding: 8px 15px;
-  border-radius: 20px;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 600;
-  cursor: pointer;
-  margin-bottom: 20px;
-  transition: all 0.2s ease;
-  font-size: 0.8rem;
-}
-
-.back-btn:hover {
-  background: var(--primary);
-  color: white;
-}
-
-/* Halaman Workout: Ringkasan Target */
+/* =================================
+    3. HALAMAN WORKOUT
+   ================================= */
 .goal-summary {
   display: grid;
-  grid-template-columns: repeat(2, 1fr) 1.5fr;
-  grid-template-areas:
-    "goal food remaining"
-    "exercise exercise remaining";
-  gap: 10px;
-  margin-bottom: 25px;
-}
-
-.goal-summary .goal-card:nth-child(1) {
-  grid-area: goal;
-}
-
-.goal-summary .goal-card:nth-child(2) {
-  grid-area: food;
-}
-
-.goal-summary .goal-card:nth-child(3) {
-  grid-area: exercise;
-}
-
-.goal-summary .goal-card:nth-child(4) {
-  grid-area: remaining;
-}
-
-.goal-card {
-  background-color: var(--card-bg);
-  border-radius: 12px;
-  padding: 10px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.goal-card h3 {
-  margin: 0 0 5px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--text-light);
-  text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-}
-
-.goal-card p {
-  margin: 0;
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: var(--primary);
-}
-
-.goal-card.remaining {
-  background-color: var(--success);
-}
-
-.goal-card.remaining h3,
-.goal-card.remaining p {
-  color: white;
-}
-
-.info-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background-color: transparent;
-  border: 1.5px solid var(--text-light);
-  color: var(--text-light);
-  font-size: 10px;
-  font-weight: 700;
-  font-style: normal;
-  cursor: help;
-  transition: all 0.2s ease;
-}
-
-.info-icon:hover {
-  background-color: var(--primary);
-  border-color: var(--primary);
-  color: white;
-  transform: scale(1.1);
-}
-
-.main-actions {
-  margin-bottom: 25px;
-}
-
-.action-buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   gap: 15px;
-}
-
-.action-btn {
-  background: var(--card-bg);
-  border: 2px solid var(--border);
-  border-radius: 15px;
-  padding: 15px;
-  text-align: left;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.action-btn:hover {
-  border-color: var(--primary);
-  transform: translateY(-3px);
-}
-
-/* Halaman Fitur (Kalkulator, Makanan) */
-.feature-page {
-  background: var(--card-bg);
-  padding: 20px;
-  border-radius: 15px;
-}
-
-.feature-page>p {
-  color: var(--text-light);
-  margin-top: -10px;
   margin-bottom: 25px;
-  font-size: 0.9rem;
 }
+.goal-card { background-color: var(--card-bg); border-radius: 12px; padding: 15px; text-align: center; }
+.goal-card h3 { margin: 0 0 5px; font-size: 0.7rem; color: var(--text-light); text-transform: uppercase; }
+.goal-card p { margin: 0; font-weight: 700; font-size: 1.1rem; color: var(--primary); }
+.goal-card.remaining { background-color: var(--success); grid-row: span 2; display: flex; flex-direction: column; justify-content: center; }
+.goal-card.remaining h2, .goal-card.remaining h1, .goal-card.remaining p { color: white; }
+.goal-card.remaining h1 { font-size: 3.5rem; margin: 5px 0; }
+.info-icon { display: inline-block; margin-left: 5px; width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--text-light); color: var(--text-light); font-size: 10px; cursor: help; }
 
-.form-group {
-  margin-bottom: 15px;
+.actions-and-water-container { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 25px; }
+.actions-and-water-container > .main-actions { flex: 2; margin-bottom: 0; }
+.actions-and-water-container > .water-tracker-section { flex: 1; margin-bottom: 0; }
+
+.action-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
+.action-btn { background: var(--card-bg); border: 2px solid var(--border); border-radius: 15px; padding: 15px; text-align: left; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: all 0.2s ease; }
+.action-btn:hover { border-color: var(--primary); transform: translateY(-3px); }
+.action-btn .icon { font-size: 1.8rem; }
+.action-btn strong { color: var(--text); }
+.action-btn span { font-size: 0.8rem; color: var(--text-light); }
+
+.water-tracker-section h2, .main-actions h2 { display: flex; align-items: center; gap: 10px; }
+.water-tracker { background-color: var(--card-bg); border-radius: 15px; padding: 20px; border: 1px solid var(--border); text-align: center; }
+.water-count { font-size: 2.5rem; font-weight: 700; color: var(--primary); }
+.water-target { font-size: 1rem; color: var(--text-light); }
+#water-lines-container { display: flex; justify-content: center; gap: 6px; height: 25px; margin-top: 10px; align-items: flex-end; }
+.water-line { width: 5px; height: 20px; border-radius: 3px; animation: line-appear 0.4s ease-out forwards; }
+.water-progress-bar { height: 10px; background-color: var(--light-gray); border-radius: 5px; margin: 15px 0; overflow: hidden; }
+.water-progress-fill { height: 100%; width: 0%; background-color: var(--primary); border-radius: 5px; transition: width 0.3s ease; }
+.water-controls { display: flex; justify-content: center; gap: 15px; }
+.water-btn { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--primary); background-color: transparent; color: var(--primary); font-size: 1.8rem; cursor: pointer; }
+.water-btn:hover { background-color: var(--primary); color: white; }
+
+
+/* =================================
+    4. HALAMAN FITUR LAINNYA
+   ================================= */
+.feature-page { background: var(--card-bg); padding: 20px; border-radius: 15px; }
+.feature-page > p { color: var(--text-light); margin-top: -10px; margin-bottom: 25px; font-size: 0.9rem; }
+.feature-page h2 {
+    color: var(--primary);
 }
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
+input, select { width: 100%; padding: 12px; border: 2px solid var(--input-border); border-radius: 10px; background-color: var(--card-bg); color: var(--text); font-family: 'Poppins', sans-serif; }
 
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: 600;
-  font-size: 0.9rem;
-}
+.weight-tracker-layout { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+.weight-input-area { flex: 1 1 300px; }
+.weight-form-inline { display: flex; gap: 10px; align-items: flex-end; }
+.weight-form-inline .form-group { flex-grow: 1; }
+.weight-tracker-layout > .chart-container { flex: 1 1 300px; min-width: 0; }
+.weight-history-container { flex-basis: 100%; }
 
-#page-calculator .form-group {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  align-items: center;
-  gap: 12px;
-}
-
-#page-calculator label {
-  text-align: right;
-  font-weight: 600;
-  color: var(--primary);
-  font-size: 0.95rem;
-}
-
-#page-calculator input,
-#page-calculator select {
-  width: 100%;
-  padding: 12px;
-  border: 2px solid var(--border);
-  border-radius: 8px;
-  font-size: 0.9rem; /* Diperkecil agar lebih seimbang */
-  font-family: 'Poppins', sans-serif;
-  background-color: var(--card-bg);
-  color: var(--text);
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-#page-calculator input:focus,
-#page-calculator select:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
-}
-
-#page-calculator .save-btn {
-  grid-column: 2;
-  box-shadow: 0 2px 6px rgba(255, 107, 53, 0.3);
-}
-
-#calculator-result {
-  margin-top: 25px;
-  padding: 18px;
-  background: rgba(46, 125, 50, 0.1);
-  border-radius: 8px;
-  border-left: 4px solid var(--success);
-  animation: fadeIn 0.4s ease-out;
-}
-
+.pr-input-group { display: flex; align-items: flex-end; gap: 10px; }
+.pr-input-group .form-group { flex-grow: 1; }
+.pr-unit-label { padding-bottom: 15px; font-weight: 600; color: var(--text-light); }
+#pr-list { display: grid; gap: 10px; }
+.pr-item { display: flex; align-items: center; background-color: var(--light-gray); padding: 15px; border-radius: 12px; border-left: 5px solid var(--primary); }
+.pr-item-icon { font-size: 1.8rem; margin-right: 15px; }
+.pr-item-details { flex-grow: 1; }
+.pr-item-details strong { display: block; color: var(--text); }
+.pr-item-details span { color: var(--primary); font-weight: 600; }
+.pr-item-date { font-size: 0.8rem; color: var(--text-light); }
+/* Mengubah warna hasil di halaman Kalkulator */
 #calculator-result h3 {
-  font-size: 1rem;
-  color: var(--text-light);
-  text-align: center;
+    color: var(--primary); /* Mengubah "Your Daily Goal Is:" menjadi oranye */
 }
 
 #calculator-result .big-text {
-  color: var(--success);
-  font-size: 1.8rem;
-  text-align: center;
+    color: var(--primary); /* Mengubah angka kalori menjadi oranye */
 }
+/* Merapikan Tampilan Daftar Makanan */
 
-#page-food input {
-  width: 100%;
-  padding: 12px;
-  border: 2px solid var(--input-border);
-  border-radius: 10px;
-  box-sizing: border-box;
-  background-color: var(--card-bg);
-  color: var(--text);
-}
-
-.search-results {
-  margin-top: 20px;
-}
-
+/* Judul "Common Foods" */
 .results-heading {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--text-light);
-  margin-top: 15px;
-  margin-bottom: 10px;
-  padding-bottom: 5px;
-  border-bottom: 2px solid var(--light-gray);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-light);
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid var(--light-gray);
 }
 
-#food-list-local,
-#food-list-api {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-height: 300px;
-  overflow-y: auto;
-}
-
+/* Setiap item makanan dalam daftar */
 .food-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  border: 1px solid var(--light-gray);
-  border-radius: 8px;
+    display: flex; /* Kunci: membuat info dan tombol sejajar */
+    justify-content: space-between; /* Mendorong tombol ke kanan */
+    align-items: center; /* Menyelaraskan secara vertikal */
+    padding: 12px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    transition: all 0.2s ease;
 }
 
+.food-item:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+/* Bagian info teks */
+.food-item-info {
+    flex-grow: 1;
+}
+
+/* Nama makanan (dipertebal) */
+.food-item-info strong {
+    font-size: 0.95rem; /* Ukuran font normal */
+    color: var(--text);
+    display: block;
+}
+
+/* Detail kalori dan porsi (font kecil) */
 .food-item-info span {
-  display: block;
-  font-size: 0.8rem;
-  color: var(--text-light);
+    font-size: 0.8rem; /* Font agak kecil sesuai permintaan */
+    color: var(--text-light);
 }
 
+/* Tombol tambah (+) */
 .add-food-btn {
-  background-color: var(--primary);
-  color: white;
-  border: none;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    font-weight: 300;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    flex-shrink: 0; /* Mencegah tombol menyusut */
+    margin-left: 15px; /* Jarak dari teks */
+    transition: all 0.2s ease;
 }
 
 .add-food-btn:hover {
-  background-color: var(--primary-dark);
-  transform: scale(1.1);
+    background-color: var(--primary-dark);
+    transform: scale(1.1);
 }
 
-/* Mengubah warna teks di dalam tombol Strength & Athletic */
-.action-btn strong {
-  color: #FFFFFF; /* Warna teks diubah menjadi putih */
-}
-
-/* Anda juga bisa mengubah warna teks deskripsinya jika perlu */
-.action-btn span {
-  color: rgba(255, 255, 255, 0.8); /* Putih dengan sedikit transparansi */
-}
-
-/* Dashboard (Chart & History) */
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  align-items: flex-start;
-}
-
-.chart-container {
-  background: var(--card-bg);
-  padding: 20px;
-  border-radius: 15px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.chart-wrapper {
-  width: 100%;
-  max-width: 220px;
-  aspect-ratio: 1 / 1;
-  position: relative;
-  margin-bottom: 20px;
-}
-
-#dailyCalorieChart {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100% !important;
-  height: 100% !important;
-}
-
-#chartLegend {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-  font-size: 0.8rem;
-  color: var(--text-light);
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 6px;
-  width: 100%;
-  justify-content: space-between;
-}
-
-.legend-label {
-  display: flex;
-  align-items: center;
-  text-transform: capitalize;
-}
-
-.legend-color {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin-right: 8px;
-  flex-shrink: 0;
-}
-
-.legend-value {
-  font-weight: 600;
-  color: var(--text);
-}
-
-#historyContainer h2 {
-  margin-top: 0;
-}
-
-.history-header-wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.history-header-wrapper h2 {
-  margin-bottom: 0;
-}
-
+/* Gaya baru untuk tombol Clear All */
 .clear-btn {
-  background: transparent;
-  border: 1.5px solid var(--danger);
-  color: var(--danger);
-  padding: 4px 12px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.2s ease;
+    background-color: var(--light-gray); /* Latar belakang abu-abu subtil */
+    color: var(--text-light); /* Warna teks abu-abu */
+    border: none; /* Hilangkan border */
+    padding: 8px 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 20px;
+    cursor: pointer;
+    display: inline-flex; /* Agar ikon dan teks sejajar */
+    align-items: center;
+    gap: 8px; /* Jarak antara ikon dan teks */
+    transition: all 0.2s ease-in-out;
 }
 
 .clear-btn:hover {
-  background: var(--danger);
-  color: white;
+    background-color: var(--danger); /* Latar belakang menjadi merah saat hover */
+    color: white; /* Teks menjadi putih */
+    transform: translateY(-2px); /* Efek sedikit terangkat */
+    box-shadow: 0 4px 10px rgba(211, 47, 47, 0.3); /* Bayangan merah */
 }
 
-#historyList {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+/* Aturan untuk ikon di dalam tombol */
+.clear-btn i {
+    font-size: 0.9em;
+}
+.action-btn {
+    flex-direction: column; /* Teks jadi di bawah ikon */
+    align-items: center; /* Pusatkan ikon dan teks */
+    text-align: center; /* Ratakan teks ke tengah */
+    padding: 15px;
 }
 
-.history-item {
-  background: var(--card-bg);
-  padding: 10px 15px;
-  border-radius: 10px;
-  border-left: 4px solid var(--primary);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.action-btn .icon {
+    font-size: 1.5em; /* Perbesar sedikit ikon */
+    margin-bottom: 5px; /* Beri jarak antara ikon dan teks */
 }
 
-.history-item-details-container {
-  flex-grow: 1;
-  padding-right: 8px;
+.action-btn div strong {
+    font-size: 1em; /* Ukuran judul utama */
+    display: block; /* Pastikan deskripsi ada di baris baru */
+    margin-bottom: 3px;
 }
 
-.history-item-header {
-  font-weight: 600;
-  font-size: 0.9rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 4px;
-  text-transform: capitalize;
+.action-btn div span {
+    font-size: 0.8em; /* Ukuran deskripsi */
+    color: var(--text-light);
 }
-
-.history-item-details {
-  font-size: 0.75rem;
-  color: var(--text-light);
-}
-
-.delete-history-btn {
-  width: 24px;
-  height: 24px;
-  border: 1px solid var(--light-gray);
-  background-color: transparent;
-  color: var(--text-light);
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.delete-history-btn:hover {
-  background-color: var(--danger);
-  color: white;
-  border-color: var(--danger);
-  transform: rotate(90deg) scale(1.05);
-}
-
 /* =================================
-   5. Modal
+    5. DASHBOARD (Chart & Riwayat)
    ================================= */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
+.dashboard-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; align-items: flex-start; }
+.chart-container { background: var(--card-bg); padding: 20px; border-radius: 15px; }
+.chart-wrapper { width: 100%; position: relative; height: 250px; }
+#chartLegend { width: 100%; font-size: 0.8rem; color: var(--text-light); margin-top: 20px; }
+.legend-item { display: flex; justify-content: space-between; margin-bottom: 6px; }
 
-.modal-content {
-  background: var(--card-bg);
-  padding: 25px;
-  border-radius: 15px;
-  width: 90%;
-  max-width: 400px;
-  position: relative;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-.modal-content ul {
-  padding-left: 20px;
-}
-
-.modal-content li {
-  margin-bottom: 10px;
-}
-
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  border: none;
-  background: transparent;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: var(--text-light);
-}
-
-.modal-content h2 {
-  margin-top: 0;
-}
-
-.modal-content select,
-.modal-content input {
-  width: 100%;
-  padding: 12px;
-  border: 2px solid var(--input-border);
-  border-radius: 10px;
-  margin: 10px 0;
-  box-sizing: border-box;
-  background-color: var(--card-bg);
-  color: var(--text);
-}
-
-.save-btn {
-  background: var(--primary);
-  color: white;
-  border: none;
-  padding: 14px;
-  width: 100%;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: background-color 0.2s ease;
-}
-
-.save-btn:active {
-  background-color: var(--primary-dark);
-  transform: translateY(1px);
-}
-
-.athletic-stats {
-  display: flex;
-  justify-content: space-around;
-  margin: 15px 0;
-  font-weight: 600;
-}
-
-/* Status Fokus untuk Aksesibilitas */
-button:focus-visible,
-a:focus-visible,
-select:focus-visible,
-input:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-  box-shadow: none;
-}
-
-/* Animasi */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+#historyList, #weight-history-list { display: flex; flex-direction: column; gap: 8px; }
+.history-item { background: var(--card-bg); padding: 10px 15px; border-radius: 10px; border-left: 4px solid var(--primary); display: flex; justify-content: space-between; align-items: center; }
+.delete-history-btn { width: 24px; height: 24px; border: 1px solid var(--light-gray); color: var(--text-light); border-radius: 50%; cursor: pointer; }
 
 /* =================================
-   6. Responsive
+    6. MODAL & ANIMASI
+   ================================= */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+.modal-content { background: var(--card-bg); padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; position: relative; }
+.close-btn { position: absolute; top: 10px; right: 10px; border: none; background: transparent; font-size: 1.5rem; cursor: pointer; color: var(--text-light); }
+.save-btn { background: var(--primary); color: white; border: none; padding: 14px; width: 100%; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 10px; }
+
+.glowing-btn:hover { animation: pulse-glow 1.5s infinite ease-in-out; }
+@keyframes pulse-glow { 50% { box-shadow: 0 0 20px rgba(255, 107, 53, 0.7); } }
+@keyframes line-appear { from { opacity: 0; transform: scaleY(0); } to { opacity: 1; transform: scaleY(1); } }
+
+/* =================================
+    7. RESPONSIVE
    ================================= */
 @media (max-width: 768px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 600px) {
-  #page-calculator .form-group {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-  #page-calculator label {
-    text-align: left;
-    margin-bottom: 4px;
-  }
-  #page-calculator .save-btn {
-    grid-column: 1;
-  }
+  .goal-summary { grid-template-columns: 1fr 1fr; }
+  .goal-card.remaining { grid-column: span 2; }
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .actions-and-water-container, .weight-tracker-layout { flex-direction: column; }
+  .weight-input-area { border-right: none; padding-right: 0; width: 100%; }
 }
 
 @media (max-width: 480px) {
-  body {
-    padding: 10px;
-  }
-  .glass-container {
-    padding: 15px;
-  }
-  .action-buttons {
-    grid-template-columns: 1fr;
-  }
-  .app-header {
-    flex-direction: column;
-    gap: 10px;
-  }
-  .menu-card.featured {
-    padding: 20px;
-    gap: 15px;
-  }
-  .menu-card.featured .icon {
-    font-size: 2.5rem;
-  }
-  .menu-card.featured .menu-card-text strong {
-    font-size: 1.1rem;
-  }
-  .secondary-menu {
-    grid-template-columns: 1fr 1fr;
-  }
-  .secondary-menu .menu-card {
-    flex-direction: row;
-    justify-content: flex-start;
-    text-align: left;
-    gap: 15px;
-  }
-  .secondary-menu .menu-card-text strong {
-    font-size: 0.9rem;
-  }
+  body { padding: 10px; }
+  .glass-container { padding: 15px; }
+  .goal-summary, .action-buttons, .secondary-menu { grid-template-columns: 1fr; }
+  .goal-card.remaining { grid-column: auto; }
+  .app-header { flex-direction: column; gap: 10px; }
 }
 
-@keyframes pulse-glow {
-  0% {
-    box-shadow: 0 0 5px rgba(255, 107, 53, 0.3), 0 0 5px rgba(255, 107, 53, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba(255, 107, 53, 0.7), 0 0 30px rgba(255, 107, 53, 0.5);
-  }
-  100% {
-    box-shadow: 0 0 5px rgba(255, 107, 53, 0.3), 0 0 5px rgba(255, 107, 53, 0.2);
-  }
-}
-.glowing-btn {
-  /* Memberi sedikit bayangan awal agar transisi lebih halus */
-  box-shadow: 0 0 5px rgba(255, 107, 53, 0.3);
-  transition: all 0.3s ease; /* Transisi untuk semua properti */
-}
-
-.glowing-btn:hover {
-  /* Menjalankan animasi saat kursor diarahkan ke tombol */
-  animation: pulse-glow 1.5s infinite ease-in-out;
-}
-
-/* Penyesuaian untuk Tampilan Mobile */
-@media (max-width: 480px) {
-    /* Mengecilkan kartu 'Remaining' secara keseluruhan */
-    .goal-card.remaining {
-        padding: 1rem;
-        min-height: auto; /* Hapus tinggi minimum agar lebih fleksibel */
-    }
-
-    /* Mengecilkan ukuran font judul, angka, dan sub-judul */
-    .goal-card.remaining h2 {
-        font-size: 1.1rem; /* Sedikit lebih kecil */
-    }
-
-    .goal-card.remaining h1 {
-        font-size: 3rem; /* Jauh lebih kecil agar tidak terlalu dominan */
-        margin: 5px 0; /* Kurangi margin atas dan bawah */
-    }
-    
-    .goal-card.remaining p {
-        font-size: 0.8rem; /* Sedikit lebih kecil */
-    }
+@media (max-width: 600px) { / Sesuaikan angka 600px jika perlu /
+.action-buttons {
+display: grid; / Ubah menjadi grid /
+grid-template-columns: 1fr; / Satu kolom saja /
+gap: 15px; / Jarak antar tombol */
 }
