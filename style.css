@@ -386,3 +386,15 @@ input, select { width: 100%; padding: 12px; border: 2px solid var(--input-border
   .goal-card.remaining { grid-column: auto; }
   .app-header { flex-direction: column; gap: 10px; }
 }
+
+/* Penyesuaian ukuran font tombol aksi di mobile */
+@media (max-width: 600px) {
+    .action-btn div strong {
+        font-size: 0.9rem; /* Perkecil ukuran judul utama */
+    }
+
+    .action-btn div span {
+        font-size: 0.75rem; /* Perkecil ukuran deskripsi */
+    }
+}
+
