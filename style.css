@@ -406,47 +406,49 @@ input, select { width: 100%; padding: 12px; border: 2px solid var(--input-border
 @keyframes line-appear { from { opacity: 0; transform: scaleY(0); } to { opacity: 1; transform: scaleY(1); } }
 
 /* =================================
-    7. RESPONSIVE (Revisi)
+    7. RESPONSIVE
    ================================= */
 @media (max-width: 768px) {
-  /* Di perangkat mobile, susun bagian utama secara vertikal */
-  .dashboard-grid { grid-template-columns: 1fr; }
-  .actions-and-water-container { gap: 20px; } /* Tambahkan jarak antar bagian */
+    body { padding: 10px; }
+    .glass-container { padding: 15px; }
 
-  /* Di perangkat mobile, tombol action menjadi grid 2 kolom */
-  .action-buttons {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-  }
-  .action-btn {
-    flex-direction: column; /* Icon dan teks di tumpuk vertikal di dalam tombol */
-    align-items: center;
-    text-align: center;
-  }
-
-  /* Di perangkat mobile, bagian ringkasan tujuan menjadi 2 kolom */
+    /* Mengubah goal-summary menjadi grid 2 kolom di tablet */
     .goal-summary {
-        /* Mengatur grid menjadi 4 kolom, sama seperti tampilan desktop */
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(2, 1fr);
         gap: 15px;
-        margin-bottom: 25px;
     }
     .goal-card.remaining {
-        /* Mengatur agar kartu Jatah Hari Ini hanya mengambil 1 kolom, bukan 2 */
-        grid-column: span 1;
-        /* Tambahkan kembali padding yang hilang agar tidak keluar garis */
-        padding: 15px;
+        grid-column: span 2;
+    }
+
+    /* Di tablet, tata letak utama tetap vertikal */
+    .dashboard-grid, 
+    .actions-and-water-container, 
+    .weight-tracker-layout {
+        flex-direction: column;
+    }
+
+    /* Tombol activity tetap dalam grid 2 kolom di tablet */
+    .action-buttons {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
     }
 }
 
 @media (max-width: 480px) {
-  body { padding: 10px; }
-  .glass-container { padding: 15px; }
-  
-  /* Di layar sangat kecil, semua ditumpuk menjadi 1 kolom */
-  .goal-summary, .action-buttons, .secondary-menu { grid-template-columns: 1fr; }
-  .goal-card.remaining { grid-column: auto; }
-  .app-header { flex-direction: column; gap: 10px; }
+    /* Di layar ponsel, semua elemen menjadi 1 kolom */
+    .goal-summary, 
+    .action-buttons, 
+    .secondary-menu {
+        grid-template-columns: 1fr;
+    }
+    .goal-card.remaining {
+        grid-column: auto;
+    }
+    .app-header { 
+        flex-direction: column; 
+        gap: 10px; 
+    }
 }
 
