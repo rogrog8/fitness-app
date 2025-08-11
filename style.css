@@ -145,7 +145,7 @@ h3 { font-size: 1.1rem; margin-bottom: 15px; }
 .back-btn:hover { background: var(--primary); color: white; }
 
 /* =================================
-    3. HALAMAN WORKOUT
+    3. HALAMAN WORKOUT (Revisi)
    ================================= */
 .goal-summary {
   display: grid;
@@ -161,72 +161,50 @@ h3 { font-size: 1.1rem; margin-bottom: 15px; }
 .goal-card.remaining h1 { font-size: 3.5rem; margin: 5px 0; }
 .info-icon { display: inline-block; margin-left: 5px; width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--text-light); color: var(--text-light); font-size: 10px; cursor: help; }
 
-/* Aturan ini akan membuat container utama terlihat seperti satu kotak/card */
-.actions-and-water-container {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
-    margin-bottom: 25px;
-    /* Tambahkan properti berikut untuk membuatnya menjadi satu kotak */
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 15px;
-    padding: 20px;
+/* Kontainer utama untuk bagian Tombol & Water Intake (untuk tampilan web) */
+.actions-and-water-container { 
+  display: flex; 
+  gap: 20px; 
+  align-items: flex-start; 
+  margin-bottom: 25px; 
+}
+.actions-and-water-container > .main-actions { 
+  flex: 2; 
+  margin-bottom: 0; 
+}
+.actions-and-water-container > .water-tracker-section { 
+  flex: 1; 
+  margin-bottom: 0; 
 }
 
-.actions-and-water-container > .main-actions {
-    flex: 1;
-    margin-bottom: 0;
-    display: flex;
-    flex-direction: column;
+/* Tombol-tombol di dalam kontainer */
+.action-buttons { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 15px; 
 }
-
-.actions-and-water-container > .water-tracker-section {
-    flex: 1; /* Biarkan flex: 1 */
-    margin-bottom: 0;
-    /* Hapus background-color, border, dan padding dari sini */
-    /* karena sudah ada di container utamanya */
-    background: none;
-    border: none;
-    padding: 0;
-}
-
-/* Pastikan juga Anda menghapus gaya kotak dari water tracker section */
-.water-tracker {
-    background: none;
-    border: none;
-    padding: 0;
-    text-align: center;
-    /* Tambahkan flex-grow agar mengisi ruang yang tersedia */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 100%;
-}
-
-.action-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    height: 100%; /* Pastikan container tombol mengisi tinggi yang tersedia */
-}
-
-/* Biarkan aturan untuk .action-btn seperti sebelumnya */
-.action-btn {
-    background: var(--card-bg);
-    border: 2px solid var(--border);
-    border-radius: 15px;
-    padding: 15px;
-    text-align: left;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    flex-direction: row;
-    justify-content: flex-start;
-    flex-grow: 1; /* Properti ini akan membuat setiap tombol membagi tinggi secara merata */
+.action-btn { 
+  background: var(--card-bg); 
+  border: 2px solid var(--border); 
+  border-radius: 15px; 
+  padding: 15px; 
+  text-align: left; 
+  display: flex; 
+  align-items: center; 
+  gap: 15px;
+  cursor: pointer; 
+  transition: all 0.2s ease; 
 }
 .action-btn:hover { border-color: var(--primary); transform: translateY(-3px); }
+
+/* Kontainer Water Tracker (untuk tampilan web) */
+.water-tracker {
+  background-color: var(--card-bg);
+  border-radius: 15px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  text-align: center;
+}
 .action-btn .icon { font-size: 1.8rem; }
 .action-btn strong { color: var(--text); }
 .action-btn span { font-size: 0.8rem; color: var(--text-light); }
@@ -428,39 +406,38 @@ input, select { width: 100%; padding: 12px; border: 2px solid var(--input-border
 @keyframes line-appear { from { opacity: 0; transform: scaleY(0); } to { opacity: 1; transform: scaleY(1); } }
 
 /* =================================
-    7. RESPONSIVE
+    7. RESPONSIVE (Revisi)
    ================================= */
 @media (max-width: 768px) {
-  .goal-summary {
-    grid-template-columns: repeat(4, 1fr);
-  }
-  .goal-card.remaining {
-    grid-column: span 1;
-  }
+  /* Di perangkat mobile, susun bagian utama secara vertikal */
   .dashboard-grid { grid-template-columns: 1fr; }
-  .actions-and-water-container, .weight-tracker-layout {
-    /* Ubah ini menjadi 'row' atau hapus untuk kembali ke tata letak desktop */
-    flex-direction: row;
+  .actions-and-water-container, .weight-tracker-layout { flex-direction: column; }
+  .actions-and-water-container { gap: 20px; } /* Tambahkan jarak antar bagian */
+
+  /* Di perangkat mobile, tombol action menjadi grid 2 kolom */
+  .action-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
   }
-  .weight-input-area { border-right: none; padding-right: 0; width: 100%; }
+  .action-btn {
+    flex-direction: column; /* Icon dan teks di tumpuk vertikal di dalam tombol */
+    align-items: center;
+    text-align: center;
+  }
+
+  /* Di perangkat mobile, bagian ringkasan tujuan menjadi 2 kolom */
+  .goal-summary { grid-template-columns: 1fr 1fr; }
+  .goal-card.remaining { grid-column: span 2; }
 }
 
 @media (max-width: 480px) {
   body { padding: 10px; }
   .glass-container { padding: 15px; }
+  
+  /* Di layar sangat kecil, semua ditumpuk menjadi 1 kolom */
   .goal-summary, .action-buttons, .secondary-menu { grid-template-columns: 1fr; }
   .goal-card.remaining { grid-column: auto; }
   .app-header { flex-direction: column; gap: 10px; }
-}
-
-/* Penyesuaian ukuran font tombol aksi di mobile */
-@media (max-width: 600px) {
-    .action-btn div strong {
-        font-size: 0.9rem; /* Perkecil ukuran judul utama */
-    }
-
-    .action-btn div span {
-        font-size: 0.75rem; /* Perkecil ukuran deskripsi */
-    }
 }
 
