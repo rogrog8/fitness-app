@@ -411,7 +411,6 @@ input, select { width: 100%; padding: 12px; border: 2px solid var(--input-border
 @media (max-width: 768px) {
   /* Di perangkat mobile, susun bagian utama secara vertikal */
   .dashboard-grid { grid-template-columns: 1fr; }
-  .actions-and-water-container, .weight-tracker-layout { flex-direction: column; }
   .actions-and-water-container { gap: 20px; } /* Tambahkan jarak antar bagian */
 
   /* Di perangkat mobile, tombol action menjadi grid 2 kolom */
@@ -427,8 +426,18 @@ input, select { width: 100%; padding: 12px; border: 2px solid var(--input-border
   }
 
   /* Di perangkat mobile, bagian ringkasan tujuan menjadi 2 kolom */
-  .goal-summary { grid-template-columns: 1fr 1fr; }
-  .goal-card.remaining { grid-column: span 2; }
+    .goal-summary {
+        /* Mengatur grid menjadi 4 kolom, sama seperti tampilan desktop */
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+    .goal-card.remaining {
+        /* Mengatur agar kartu Jatah Hari Ini hanya mengambil 1 kolom, bukan 2 */
+        grid-column: span 1;
+        /* Tambahkan kembali padding yang hilang agar tidak keluar garis */
+        padding: 15px;
+    }
 }
 
 @media (max-width: 480px) {
