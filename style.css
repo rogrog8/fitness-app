@@ -161,12 +161,62 @@ h3 { font-size: 1.1rem; margin-bottom: 15px; }
 .goal-card.remaining h1 { font-size: 3.5rem; margin: 5px 0; }
 .info-icon { display: inline-block; margin-left: 5px; width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--text-light); color: var(--text-light); font-size: 10px; cursor: help; }
 
-.actions-and-water-container { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 25px; }
-.actions-and-water-container > .main-actions { flex: 2; margin-bottom: 0; }
-.actions-and-water-container > .water-tracker-section { flex: 1; margin-bottom: 0; }
+/* Aturan ini akan membuat container utama terlihat seperti satu kotak/card */
+.actions-and-water-container {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    margin-bottom: 25px;
+    /* Tambahkan properti berikut untuk membuatnya menjadi satu kotak */
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    padding: 20px;
+}
 
-.action-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
-.action-btn { background: var(--card-bg); border: 2px solid var(--border); border-radius: 15px; padding: 15px; text-align: left; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: all 0.2s ease; }
+.actions-and-water-container > .main-actions {
+    flex: 1; /* Biarkan flex: 1 agar lebarnya sama dengan water intake */
+    margin-bottom: 0;
+}
+
+.actions-and-water-container > .water-tracker-section {
+    flex: 1; /* Biarkan flex: 1 */
+    margin-bottom: 0;
+    /* Hapus background-color, border, dan padding dari sini */
+    /* karena sudah ada di container utamanya */
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+/* Pastikan juga Anda menghapus gaya kotak dari water tracker section */
+.water-tracker {
+    background: none;
+    border: none;
+    padding: 0;
+    text-align: center;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Biarkan aturan untuk .action-btn seperti sebelumnya */
+.action-btn {
+    background: var(--card-bg);
+    border: 2px solid var(--border);
+    border-radius: 15px;
+    padding: 15px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-direction: row; /* Pastikan konten di dalam tombol tetap horizontal */
+    justify-content: flex-start;
+}
 .action-btn:hover { border-color: var(--primary); transform: translateY(-3px); }
 .action-btn .icon { font-size: 1.8rem; }
 .action-btn strong { color: var(--text); }
