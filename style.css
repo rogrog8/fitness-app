@@ -386,10 +386,3 @@ input, select { width: 100%; padding: 12px; border: 2px solid var(--input-border
   .goal-card.remaining { grid-column: auto; }
   .app-header { flex-direction: column; gap: 10px; }
 }
-
-@media (max-width: 600px) { / Sesuaikan angka 600px jika perlu /
-.action-buttons {
-display: grid; / Ubah menjadi grid /
-grid-template-columns: 1fr; / Satu kolom saja /
-gap: 15px; / Jarak antar tombol */
-}
