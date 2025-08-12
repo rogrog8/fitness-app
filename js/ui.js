@@ -3,8 +3,11 @@ class UI {
         // Pemilihan semua elemen DOM
         this.pages = document.querySelectorAll('.page');
         this.mainMenu = document.querySelector('.main-menu');
-        this.backButtons = document.querySelectorAll('.back-btn');
+        // KODE BARU di ui.js
+        this.backButtons = document.querySelectorAll('.back-btn:not(#backToFitnessBtn):not(#backToWorkoutBtn)');
         this.currentDateEl = document.getElementById('currentDate');
+        this.workoutDateDisplayEl = document.getElementById('workout-date-display');
+        console.log('Elemen tanggal workout:', this.workoutDateDisplayEl);
         
         // Elemen Kalori & Riwayat
         this.calorieGoalEl = document.getElementById('calorieGoal');
@@ -33,13 +36,15 @@ class UI {
         this.weightHistoryListEl = document.getElementById('weight-history-list');
         this.weightForm = document.getElementById('weight-form');
         this.weightInput = document.getElementById('weight-input');
-        
+        this.clearWeightBtn = document.getElementById('clear-weight-btn');
+
         // Elemen PR Tracker
         this.prForm = document.getElementById('pr-form');
         this.prExerciseSelect = document.getElementById('pr-exercise');
         this.prValueInput = document.getElementById('pr-value');
         this.prUnitEl = document.getElementById('pr-unit');
         this.prListEl = document.getElementById('pr-list');
+        this.clearPrBtn = document.getElementById('clear-pr-btn');
         
         // Elemen Water Tracker
         this.waterCountEl = document.getElementById('water-count');
@@ -55,7 +60,34 @@ class UI {
         this.calorieColors = ['#FF6B35', '#E05725', '#2D3436', '#FFD1B3', '#636E72', '#B2BEC3'];
     }
 
-showPage(pageIdToShow) {
+// GANTI DENGAN FUNGSI BARU INI
+    showPage(pageIdToShow) {
+    // ================================================================
+    // BAGIAN BARU UNTUK MENGONTROL HEADER
+    // ================================================================
+    
+    // 1. Tentukan halaman mana saja yang akan menyembunyikan header
+    // Ganti atau tambahkan ID halaman sesuai kebutuhan Anda
+    const pagesWithHiddenHeader = [
+    'page-workout', 
+    'page-calculator', 
+    'page-food',
+    'page-weight-tracker', // <-- TAMBAHKAN ID INI
+    'page-pr-tracker'
+    ];
+
+    // 2. Cek apakah halaman yang akan ditampilkan ada di dalam daftar
+    if (pagesWithHiddenHeader.includes(pageIdToShow)) {
+        // Jika YA, tambahkan class ke body untuk sembunyikan header
+        document.body.classList.add('header-hidden');
+    } else {
+        // Jika TIDAK (misal: kembali ke home), hapus class agar header muncul lagi
+        document.body.classList.remove('header-hidden');
+    }
+    
+    // ================================================================
+    // Kode Anda yang sudah ada untuk menampilkan halaman (JANGAN DIHAPUS)
+    // ================================================================
     this.pages.forEach(page => {
         if (page.id === pageIdToShow) {
             page.classList.remove('hidden');
@@ -170,7 +202,7 @@ showPage(pageIdToShow) {
     // Letakkan fungsi ini di dalam class UI di file ui.js
 // Misalnya, di bawah fungsi renderFoodList
 
-renderApiFoodList(foods) {
+    renderApiFoodList(foods) {
     const container = this.foodListApiEl;
     container.innerHTML = '<h3 class="results-heading">Online Results</h3>';
 
@@ -192,7 +224,7 @@ renderApiFoodList(foods) {
         foodItem.innerHTML = `<div class="food-item-info"><strong style="text-transform: capitalize;">${food.name}</strong><span>${Math.round(food.calories)} kcal per ${food.serving}</span></div><button class="add-food-btn" data-food-details='${foodDetails}'>+</button>`;
         container.appendChild(foodItem);
     });
-}
+    }
 
     renderOrUpdateChart(labels, data) {
         if (this.dailyChart) this.dailyChart.destroy();
@@ -207,18 +239,23 @@ renderApiFoodList(foods) {
 
     renderWeightPage(history) {
         this.weightHistoryListEl.innerHTML = '';
+        this.weightHistoryListEl.innerHTML = '';
         if (history.length === 0) {
-            this.weightHistoryListEl.innerHTML = '<p>No weight history yet.</p>';
-            if (this.weightChart) this.weightChart.destroy();
-            return;
+        this.weightHistoryListEl.innerHTML = '<p>No weight history yet.</p>';
+        if (this.weightChart) this.weightChart.destroy();
+        // Sembunyikan tombol jika tidak ada riwayat
+        this.clearWeightBtn.classList.add('hidden');
+        return;
         }
+            // Tampilkan tombol jika ADA riwayat
+        this.clearWeightBtn.classList.remove('hidden');
 
         history.sort((a, b) => new Date(b.date) - new Date(a.date));
         history.forEach(entry => {
             const item = document.createElement('div');
             item.className = 'history-item';
             const entryDate = new Date(entry.date).toLocaleDateString('en-GB');
-            item.innerHTML = `<div class="history-item-header"><span>⚖️ ${entryDate}</span><span>${entry.weight} kg</span></div>`;
+            item.innerHTML = `<div class="history-item-header"><span>⚖️ ${entryDate}</span> <span class="history-separator">&middot;</span> <span>${entry.weight} kg</span></div>`;
             this.weightHistoryListEl.appendChild(item);
         });
 
@@ -245,21 +282,27 @@ renderApiFoodList(foods) {
     }
 
     renderPRPage(records, exercises) {
-        this.prListEl.innerHTML = '';
-        if (Object.keys(records).length === 0) {
-            this.prListEl.innerHTML = '<p>No personal records yet. Add your first one!</p>';
-            return;
-        }
-        for (const key in records) {
-            const record = records[key];
-            const exerciseName = key.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-            const unit = exercises[key] || '';
-            const recordDate = new Date(record.date).toLocaleDateString('en-GB');
-            const item = document.createElement('div');
-            item.className = 'pr-item';
-            item.innerHTML = `<div class="pr-item-icon">🏆</div><div class="pr-item-details"><strong>${exerciseName}</strong><span>${record.value} ${unit}</span></div><div class="pr-item-date">${recordDate}</div>`;
-            this.prListEl.appendChild(item);
-        }
+    this.prListEl.innerHTML = '';
+    if (Object.keys(records).length === 0) {
+        this.prListEl.innerHTML = '<p>No personal records yet. Add your first one!</p>';
+        // Sembunyikan tombol jika tidak ada record
+        this.clearPrBtn.classList.add('hidden'); 
+        return;
+    }
+
+    // Tampilkan tombol jika ADA record
+    this.clearPrBtn.classList.remove('hidden'); 
+
+    for (const key in records) {
+        const record = records[key];
+        const exerciseName = key.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        const unit = exercises[key] || '';
+        const recordDate = new Date(record.date).toLocaleDateString('en-GB');
+        const item = document.createElement('div');
+        item.className = 'pr-item';
+        item.innerHTML = `<div class="pr-item-icon">🏆</div><div class="pr-item-details"><strong>${exerciseName}</strong><span>${record.value} ${unit}</span></div><div class="pr-item-date">${recordDate}</div>`;
+        this.prListEl.appendChild(item);
+    }
     }
 
     renderWaterTracker(current, target) {

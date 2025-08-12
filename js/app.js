@@ -31,48 +31,80 @@ class App {
     }
 
     loadEventListeners() {
-        // Navigasi
-        this.ui.mainMenu.addEventListener('click', (e) => this.navigate(e));
-        this.ui.backButtons.forEach(btn => btn.addEventListener('click', () => this.ui.showPage('page-home')));
-        
-        // Kalkulator
-        document.getElementById('calorie-calculator-form').addEventListener('submit', (e) => this.calculateAndSaveTDEE(e));
-        
-        // Makanan
-        document.getElementById('food-search').addEventListener('input', (e) => this.handleFoodSearch(e));
-        document.getElementById('page-food').addEventListener('click', (e) => this.addFood(e));
-        
-        // Workout & Modal
-        document.getElementById('strengthBtn').addEventListener('click', () => this.ui.openModal(document.getElementById('strengthModal')));
-        document.getElementById('exerciseRefBtn').addEventListener('click', () => this.ui.openModal(document.getElementById('refModal')));
-        document.querySelectorAll('.close-btn').forEach(btn => btn.addEventListener('click', () => this.ui.closeModal(document.getElementById(btn.dataset.modalId))));
-        document.getElementById('saveStrengthBtn').addEventListener('click', () => this.saveStrengthWorkout());
-        
-        // Tombol Aksi Baru
-        document.getElementById('weightTrackerBtn').addEventListener('click', () => {
-            this.ui.showPage('page-weight-tracker');
-            this.ui.renderWeightPage(this.weightHistory);
-        });
-        document.getElementById('prTrackerBtn').addEventListener('click', () => {
-            this.ui.showPage('page-pr-tracker');
-            this.ui.renderPRPage(this.personalRecords, this.prExercises);
-        });
+    // Navigasi
+    this.ui.mainMenu.addEventListener('click', (e) => this.navigate(e));
+    this.ui.backButtons.forEach(btn => btn.addEventListener('click', () => this.ui.showPage('page-home')));
+    
+    // Kalkulator
+    document.getElementById('calorie-calculator-form').addEventListener('submit', (e) => this.calculateAndSaveTDEE(e));
+    
+    // Makanan
+    document.getElementById('food-search').addEventListener('input', (e) => this.handleFoodSearch(e));
+    document.getElementById('page-food').addEventListener('click', (e) => this.addFood(e));
+    
+    // Workout & Modal
+    document.getElementById('strengthBtn').addEventListener('click', () => this.ui.openModal(document.getElementById('strengthModal')));
+    document.getElementById('exerciseRefBtn').addEventListener('click', () => this.ui.openModal(document.getElementById('refModal')));
+    document.querySelectorAll('.close-btn').forEach(btn => btn.addEventListener('click', () => this.ui.closeModal(document.getElementById(btn.dataset.modalId))));
+    document.getElementById('saveStrengthBtn').addEventListener('click', () => this.saveStrengthWorkout());
+    
+    // Tombol Aksi Baru
+    document.getElementById('weightTrackerBtn').addEventListener('click', () => {
+        this.ui.showPage('page-weight-tracker');
+        this.ui.renderWeightPage(this.weightHistory);
+        // Tambahkan kode ini di akhir fungsi renderWeightPage(history) di ui.js
+    const backToFitnessBtn = document.getElementById('backToFitnessBtn');
+    if (backToFitnessBtn) {
+    backToFitnessBtn.addEventListener('click', () => {
+        // Asumsi 'app' adalah instance global dari kelas App
+        app.ui.showPage('page-workout');
+    });
+    }
+    });
 
-        // Form Fitur Baru
-        this.ui.weightForm.addEventListener('submit', (e) => this.saveWeightEntry(e));
-        this.ui.prForm.addEventListener('submit', (e) => this.savePersonalRecord(e));
+    // KODE BARU YANG SUDAH DIPERBAIKI
+    document.getElementById('prTrackerBtn').addEventListener('click', () => {
+        this.ui.showPage('page-pr-tracker');
+        this.ui.renderPRPage(this.personalRecords, this.prExercises);
+
+        // DAFTARKAN EVENT LISTENER DI SINI
+        // Kita tambahkan 'once: true' agar event hanya ditambahkan sekali
         this.ui.prExerciseSelect.addEventListener('change', (e) => {
             const selectedExercise = e.target.value;
-            this.ui.prUnitEl.textContent = this.prExercises[selectedExercise];
+            // Baris penyebab error sudah kita nonaktifkan
+            // this.ui.prUnitEl.textContent = this.prExercises[selectedExercise];
+        }, { once: true });
+    });
+
+    // Form Fitur Baru
+    this.ui.weightForm.addEventListener('submit', (e) => this.saveWeightEntry(e));
+    this.ui.prForm.addEventListener('submit', (e) => this.savePersonalRecord(e));
+
+    // Water Tracker
+    this.ui.addWaterBtn.addEventListener('click', () => this.updateWaterIntake(1));
+    this.ui.subtractWaterBtn.addEventListener('click', () => this.updateWaterIntake(-1));
+
+    // Riwayat
+    this.ui.historyListEl.addEventListener('click', (e) => this.handleHistoryClick(e));
+    this.ui.clearAllBtn.addEventListener('click', () => this.clearAllActivities());
+    
+    // Tombol "Back to Genie Fitness" di halaman Weight Tracker
+    const backToFitnessBtn = document.getElementById('backToFitnessBtn');
+    if (backToFitnessBtn) {
+        backToFitnessBtn.addEventListener('click', () => {
+            this.ui.showPage('page-workout');
         });
+    }
 
-        // Water Tracker
-        this.ui.addWaterBtn.addEventListener('click', () => this.updateWaterIntake(1));
-        this.ui.subtractWaterBtn.addEventListener('click', () => this.updateWaterIntake(-1));
-
-        // Riwayat
-        this.ui.historyListEl.addEventListener('click', (e) => this.handleHistoryClick(e));
-        this.ui.clearAllBtn.addEventListener('click', () => this.clearAllActivities());
+    // Tombol "Back to Genie Fitness" di halaman Personal Records
+    const backToWorkoutBtn = document.getElementById('backToWorkoutBtn');
+    if (backToWorkoutBtn) {
+        backToWorkoutBtn.addEventListener('click', () => {
+            this.ui.showPage('page-workout');
+        });
+    }
+    document.getElementById('clear-pr-btn').addEventListener('click', () => this.clearAllPersonalRecords());
+    document.getElementById('clear-weight-btn').addEventListener('click', () => this.clearAllWeightHistory());
     }
 
     navigate(e) {
@@ -105,6 +137,21 @@ class App {
         weightInput.value = '';
     }
 
+    // Method baru untuk menghapus semua riwayat berat badan
+    clearAllWeightHistory() {
+    if (confirm('Are you sure you want to delete weight history?')) {
+
+        // 1. Kosongkan data riwayat di aplikasi
+        this.weightHistory = [];
+
+        // 2. Simpan array kosong ke dalam storage
+        Storage.saveWeightHistory(this.weightHistory);
+
+        // 3. Perbarui tampilan UI untuk menampilkan daftar yang kosong
+        this.ui.renderWeightPage(this.weightHistory);
+    }
+    }
+
     savePersonalRecord(e) {
         e.preventDefault();
         const exercise = this.ui.prExerciseSelect.value;
@@ -131,6 +178,21 @@ class App {
         this.ui.renderPRPage(this.personalRecords, this.prExercises);
         this.ui.prValueInput.value = '';
         alert('New personal record saved!');
+    }
+    // Method baru untuk menghapus semua personal record
+    clearAllPersonalRecords() {
+    // 1. Minta konfirmasi pengguna untuk mencegah kesalahan
+    if (confirm('Are you sure you want to delete personal record?')) {
+
+        // 2. Kosongkan data record di aplikasi
+        this.personalRecords = {}; 
+
+        // 3. Simpan objek kosong ke dalam storage
+        Storage.savePersonalRecords(this.personalRecords);
+
+        // 4. Perbarui tampilan UI untuk menampilkan daftar yang kosong
+        this.ui.renderPRPage(this.personalRecords, this.prExercises);
+    }
     }
     
     updateWaterIntake(change) {
@@ -236,14 +298,23 @@ class App {
     }
     
     loadInitialData() {
-        this.ui.currentDateEl.textContent = this.ui.formatDate(this.today);
+        // 1. BUAT variabel 'formattedDate' dan simpan hasil format tanggal di dalamnya
+    const formattedDate = this.ui.formatDate(this.today);
+
+// 2. Gunakan variabel itu untuk elemen tanggal di header utama
+    this.ui.currentDateEl.textContent = formattedDate;
+
+// 3. Gunakan LAGI variabel yang sama untuk elemen tanggal di halaman fitness
+    if (this.ui.workoutDateDisplayEl) {
+    this.ui.workoutDateDisplayEl.textContent = formattedDate;
+    }
         this.ui.renderFoodList(this.foodDataArray.slice(0, 10));
         
         const todayData = this.fitnessDiary[this.today] || [];
         this.ui.renderUI(todayData, this.userProfile);
         
         this.ui.populatePRExercises(this.prExercises);
-        this.ui.prUnitEl.textContent = this.prExercises[this.ui.prExerciseSelect.value];
+        // this.ui.prUnitEl.textContent = this.prExercises[this.ui.prExerciseSelect.value];
         
         this.ui.showPage('page-home');
         // Di dalam fungsi loadInitialData()

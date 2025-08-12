@@ -40,6 +40,11 @@ body.dark-theme {
 /* =================================
     1. GAYA DASAR & RESET
    ================================= */
+/* Aturan untuk menyembunyikan header saat body memiliki class 'header-hidden' */
+body.header-hidden .app-header {
+    display: none;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -70,16 +75,81 @@ h2 { font-size: 1.3rem; margin-bottom: 15px; color: var(--text); }
 h3 { font-size: 1.1rem; margin-bottom: 15px; }
 .hidden { display: none !important; }
 
+/* Aturan untuk membuat unit masuk ke dalam field input */
+
+/* GANTI ATURAN LAMA DENGAN VERSI BARU INI */
+
+/* Aturan untuk wadah input dan unit */
+.input-with-unit {
+  position: relative; /* Wajib ada untuk menjadi acuan posisi */
+  display: block;
+}
+
+/* Pastikan input mengisi seluruh wadah */
+.input-with-unit input {
+  width: 100%;
+  padding-right: 60px !important; /* Paksa padding kanan agar teks tidak tertimpa */
+}
+
+/* Atur posisi unit agar "melayang" di dalam field */
+.input-with-unit span#pr-unit {
+  position: absolute;
+  right: 15px;
+  top: 50%; /* Posisikan di tengah secara vertikal */
+  transform: translateY(-50%); /* Sempurnakan posisi tengah */
+  color: var(--text-light);
+  font-weight: 600;
+  font-size: 0.9rem;
+  pointer-events: none; /* Agar bisa diklik menembus unit */
+}
+
 /* =================================
     2. KOMPONEN & HALAMAN UTAMA
+   ================================= */
+/* =================================
+    2. KOMPONEN & HALAMAN UTAMA (VERSI BERSIH)
    ================================= */
 .app-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
+  padding: 20px 0;
+  margin-bottom: 1rem;
+  text-align: left; 
 }
-.app-header h1 { margin: 0; font-size: 1.6rem; color: var(--primary); }
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  
+  /* --- Kode untuk Efek Gradasi --- */
+  background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.app-header .date-display {
+  font-size: 0.9rem;
+}
+
+/* ATURAN HIGHLIGHT SEKARANG DI SINI (GLOBAL) */
+/* Beri gaya kartu pada setiap bagian */
+.weight-input-area,
+.chart-container,
+.weight-history-container {
+  background-color: var(--card-bg);
+  padding: 20px;
+  border-radius: 15px;
+  border: 1px solid var(--border);
+}
+.title-highlight {
+  background-color: rgba(255, 107, 53, 0.15); 
+  padding: 2px 10px;
+  border-radius: 7px;
+  letter-spacing: 0.5px;
+  color: var(--text, #E4E4E4);
+}
 .date-display { font-weight: 600; font-size: 0.85rem; }
 
 .main-menu { display: flex; flex-direction: column; gap: 20px; margin-top: 20px; }
@@ -93,52 +163,183 @@ h3 { font-size: 1.1rem; margin-bottom: 15px; }
   text-align: left;
   width: 100%;
   font-family: 'Poppins', sans-serif;
+  
 }
-.menu-card:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: var(--shadow); }
 
+.menu-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+}
+
+/* Gaya untuk tombol Genie Fitness */
 .menu-card.featured {
+    /* Mengaktifkan kembali border solid */
+    border: 2px solid rgba(255, 255, 255, 0.4); /* Border putih samar */
+    
+    /* Menambahkan box-shadow untuk efek kedalaman */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+    /* Menambahkan transisi yang lebih halus untuk semua properti */
+    transition: all 0.3s ease-in-out;
+    
+    border-radius: 15px;
+    padding: 0;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
     min-height: 150px;
+    
+    /* Tambahkan gambar sebagai latar belakang */
     background-image: url('images/fitnes-btn.jpg');
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
+    
     position: relative;
     overflow: hidden;
+    
     display: flex;
-    align-items: flex-start;
+    align-items: flex-end;
+    padding: 10;
+    
 }
-.menu-card.featured::before { content: ''; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); z-index: 1; }
-.menu-card.featured .menu-card-text { position: relative; z-index: 2; color: white; padding: 25px; }
 
-.secondary-menu { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+/* Pseudo-element untuk overlay gelap samar */
+.menu-card.featured::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    border-radius: 15px;
+    z-index: 1;
+}
+/* Gaya untuk teks di dalam tombol */
+.menu-card.featured .menu-card-text {
+    position: relative;
+    z-index: 2;
+    color: white;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Gaya hover untuk tombol */
+.menu-card.featured:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    /* Karena border dihilangkan, efek hover sekarang hanya mengubah bayangan */
+}
+
 .secondary-menu {
   display: grid;
   grid-template-columns: 1fr 1fr; /* Tetap 2 kolom */
   gap: 15px;
 }
 
-/* Aturan baru untuk membuat tombol di dalamnya lebih baik */
 .secondary-menu .menu-card {
-  min-height: 120px; /* Samakan tinggi minimal */
-  padding: 20px;
-  justify-content: center; /* Pusatkan konten */
-  align-items: center;
+    /* Mengaktifkan kembali border solid */
+    position: relative; /* Wajib untuk overlay */
+    overflow: hidden;   /* Wajib untuk overlay */
+    border: 2px solid rgba(255, 255, 255, 0.4); /* Border putih samar */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.secondary-menu .menu-card-text strong {
-  font-size: 1rem; /* Perbesar sedikit font-nya */
+/* Overlay gelap untuk kedua tombol (agar teks putih terbaca) */
+.secondary-menu .menu-card::before {
+    content: '';
+    position: absolute;
+    inset: 0; /* Mengisi seluruh area tombol */
+    background: rgba(0, 0, 0, 0.5); /* Overlay gelap 50% */
+    z-index: 1;
+    transition: background 0.3s ease;
 }
 
-.how-to-guide { margin-top: 30px; padding: 20px; background-color: var(--card-bg); border-radius: 15px; border: 1px solid var(--border); }
-.how-to-guide h2 { margin-top: 0; color: var(--primary); }
-.how-to-guide ol { padding-left: 35px; margin: 0; }
+/* Efek saat mouse menyentuh tombol */
+.secondary-menu .menu-card:hover::before {
+    background: rgba(0, 0, 0, 0.3); /* Overlay lebih terang */
+}
+
+/* Pastikan teks berada di atas overlay */
+.secondary-menu .menu-card .menu-card-text {
+    position: relative;
+    z-index: 2;
+}
+
+/* Tombol Calculator */
+.calculator-button {
+    background-image: url('images/calculator.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+/* Tombol Food List */
+.food-button {
+    background-image: url('images/food.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+/* --- Aturan Baru yang Dirapikan untuk 'How to Use This App' --- */
+.how-to-guide {
+    margin-top: 30px;
+    padding: 25px; /* Sedikit perbesar padding */
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    border: 1px solid var(--border);
+}
+
 .how-to-guide h2 {
-    font-size: 1.1rem; /* Perkecil ukuran judul dari 1.3rem */
+    margin-top: 0;
+    margin-bottom: 20px; /* Beri jarak lebih ke daftar */
+    color: var(--primary);
+    font-size: 1.2rem;
     font-weight: 700;
 }
 
+.how-to-guide ol {
+    list-style: none;
+    counter-reset: guide-counter;
+    padding-left: 0; /* Tambahkan jarak 20px di kiri */
+    margin: 0;
+}
+
 .how-to-guide li {
-    font-size: 0.85rem; /* Perkecil ukuran teks di dalam daftar */
-    margin-bottom: 10px; /* Sedikit kurangi jarak antar list */
+    position: relative;
+    padding-left: 45px; /* 3. Beri ruang untuk nomor kustom */
+    margin-bottom: 18px; /* Beri jarak antar poin */
+    font-size: 0.8rem;   /* Sedikit perbesar font */
+    line-height: 1.3;    /* Perbaiki jarak antar baris */
+    color: var(--text-light);
+}
+
+.how-to-guide li:last-child {
+    margin-bottom: 0; /* Hapus margin pada item terakhir */
+}
+
+/* 4. Buat dan beri gaya pada nomor kustom */
+.how-to-guide li::before {
+    counter-increment: guide-counter; /* Naikkan counter (1, 2, 3...) */
+    content: counter(guide-counter);  /* Tampilkan angka counter */
+    
+    /* Gaya untuk lingkaran nomor */
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 17px;
+    height: 17px;
+    background-color: var(--primary);
+    color: white;
+    border-radius: 50%;
+    font-weight: 500;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .back-btn { background: var(--light-gray); color: var(--text); border: none; padding: 8px 15px; border-radius: 20px; font-weight: 600; cursor: pointer; margin-bottom: 20px; }
@@ -156,9 +357,20 @@ h3 { font-size: 1.1rem; margin-bottom: 15px; }
 .goal-card { background-color: var(--card-bg); border-radius: 12px; padding: 15px; text-align: center; }
 .goal-card h3 { margin: 0 0 5px; font-size: 0.7rem; color: var(--text-light); text-transform: uppercase; }
 .goal-card p { margin: 0; font-weight: 700; font-size: 1.1rem; color: var(--primary); }
-.goal-card.remaining { background-color: var(--success); grid-row: span 2; display: flex; flex-direction: column; justify-content: center; }
-.goal-card.remaining h2, .goal-card.remaining h1, .goal-card.remaining p { color: white; }
-.goal-card.remaining h1 { font-size: 3.5rem; margin: 5px 0; }
+.goal-card.remaining {
+  background-color: var(--success);
+  grid-row: span 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.goal-card.remaining h2, .goal-card.remaining h1, .goal-card.remaining p {
+  color: white;
+}
+.goal-card.remaining h1 {
+  font-size: 3.5rem;
+  margin: 5px 0;
+}
 .info-icon { display: inline-block; margin-left: 5px; width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--text-light); color: var(--text-light); font-size: 10px; cursor: help; }
 
 /* Kontainer utama untuk bagian Tombol & Water Intake (untuk tampilan web) */
@@ -175,6 +387,20 @@ h3 { font-size: 1.1rem; margin-bottom: 15px; }
 .actions-and-water-container > .water-tracker-section { 
   flex: 1; 
   margin-bottom: 0; 
+}
+/* BARU: Gaya untuk kotak pembungkus Activity & Water Intake */
+.actions-and-water-container {
+  background-color: var(--card-bg); /* 1. Memberi warna latar belakang */
+  border: 1px solid var(--border);   /* 2. Memberi garis tepi */
+  border-radius: 15px;               /* 3. Membuat sudut melengkung */
+  padding: 15px;                     /* 4. Memberi jarak di dalam kotak */
+}
+
+/* 5. Hapus latar belakang dari kartu Water Intake agar tidak tumpuk */
+.water-tracker-section {
+  background-color: transparent;
+  border: none;
+  padding: 0;
 }
 
 /* Tombol-tombol di dalam kontainer */
@@ -225,9 +451,10 @@ h3 { font-size: 1.1rem; margin-bottom: 15px; }
 /* =================================
     4. HALAMAN FITUR LAINNYA
    ================================= */
-.feature-page { background: var(--card-bg); padding: 20px; border-radius: 15px; }
+.feature-page { background: var(--card-bg); padding: 10px; border-radius: 15px; }
 .feature-page > p { color: var(--text-light); margin-top: -10px; margin-bottom: 25px; font-size: 0.9rem; }
 .feature-page h2 {
+    margin-top: 0;
     color: var(--primary);
 }
 .form-group { margin-bottom: 15px; }
@@ -251,6 +478,16 @@ input, select { width: 100%; padding: 12px; border: 2px solid var(--input-border
 .pr-item-details strong { display: block; color: var(--text); }
 .pr-item-details span { color: var(--primary); font-weight: 600; }
 .pr-item-date { font-size: 0.8rem; color: var(--text-light); }
+
+/* Style untuk semua kotak fitur yang memiliki border */
+.feature-card {
+  background-color: var(--card-bg, #1E1E1E);
+  border: 1px solid var(--input-border, #4d4d4d);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 20px; /* Memberi jarak ke elemen di bawahnya */
+}
+
 /* Mengubah warna hasil di halaman Kalkulator */
 #calculator-result h3 {
     color: var(--primary); /* Mengubah "Your Daily Goal Is:" menjadi oranye */
@@ -383,7 +620,22 @@ input, select { width: 100%; padding: 12px; border: 2px solid var(--input-border
 /* =================================
     5. DASHBOARD (Chart & Riwayat)
    ================================= */
-.dashboard-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; align-items: flex-start; }
+/* GANTI DENGAN KODE BARU INI */
+/* GANTI ATURAN LAMA ANDA DENGAN INI */
+.dashboard-grid {
+    display: grid;
+    /* Buat 2 kolom, kolom kedua lebih lebar */
+    grid-template-columns: 1fr 1.2fr;
+    gap: 20px;
+    /* KUNCI UTAMA: Paksa semua item untuk rata atas */
+    align-items: start;
+}
+
+/* Hapus aturan flex yang kita coba sebelumnya (jika ada) */
+.dashboard-grid .chart-container,
+.dashboard-grid #historyContainer {
+    flex: none; /* Nonaktifkan flex jika ada sisa dari kode sebelumnya */
+}
 .chart-container { background: var(--card-bg); padding: 20px; border-radius: 15px; }
 .chart-wrapper { width: 100%; position: relative; height: 250px; }
 #chartLegend { width: 100%; font-size: 0.8rem; color: var(--text-light); margin-top: 20px; }
@@ -405,50 +657,264 @@ input, select { width: 100%; padding: 12px; border: 2px solid var(--input-border
 @keyframes pulse-glow { 50% { box-shadow: 0 0 20px rgba(255, 107, 53, 0.7); } }
 @keyframes line-appear { from { opacity: 0; transform: scaleY(0); } to { opacity: 1; transform: scaleY(1); } }
 
+/* Penyesuaian untuk Judul Halaman Genie Fitness */
+#page-workout h2 {
+    color: var(--primary); /* Memberi warna oranye */
+    text-align: left;    /* Membuatnya rata tengah */
+    margin-bottom: 0px;   /* Memberi jarak ke konten di bawahnya */
+}
 /* =================================
     7. RESPONSIVE
    ================================= */
+
+/* ATURAN UNTUK TABLET (DAN DIWARISKAN KE PONSEL) */
+/* ===================================================
+   KODE FINAL UNTUK TAMPILAN MOBILE YANG SUDAH DIPERBAIKI
+   =================================================== */
 @media (max-width: 768px) {
     body { padding: 10px; }
     .glass-container { padding: 15px; }
 
-    /* Mengubah goal-summary menjadi grid 2 kolom di tablet */
-    .goal-summary {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
+    .app-header {
+    padding-bottom: 10px;
+    margin-bottom: 15px;
     }
-    .goal-card.remaining {
-        grid-column: span 2;
+    .main-menu {
+    margin-top: 0;
     }
+/* --- Aturan untuk membuat menu sekunder horizontal --- */
+.secondary-menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 5px;
+    margin-top: 10px;
+    font-family: 'Poppins', sans-serif;
+}
 
-    /* Di tablet, tata letak utama tetap vertikal */
-    .dashboard-grid, 
-    .actions-and-water-container, 
-    .weight-tracker-layout {
+/* Menyamakan gaya tombol sekunder dengan tombol utama */
+.secondary-menu .menu-card {
+    flex: 1;
+    min-height: 80px;      /* Tambahkan tinggi minimal */
+    padding: 15px 10px;    /* Perbesar padding vertikal */
+    border-radius: 12px;   /* Sedikit perbesar radius sudut */
+    background-color: #2D3436; /* Latar belakang gelap agar teks putih terbaca */
+    color: white;              /* 1. Mengubah warna font menjadi putih */
+    display: flex;
+    align-items: flex-end;;
+    justify-content: flex-start;
+    padding: 20;
+}
+
+.secondary-menu .menu-card-text strong {
+    font-size: 0.8rem;        /* 2. Menyamakan ukuran font */
+    color: white;
+    font-weight: normal; /* Tambahkan baris ini */
+}
+
+/* GANTI DENGAN SATU BLOK INI */
+#page-workout {
+    position: relative;
+    padding: 20px;
+}
+#page-workout .back-btn {
+    margin-bottom: 10px;
+}
+#page-workout h2 {
+    margin-top: 5px;
+}
+#page-workout .date-display {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 0.8rem;
+}
+/* --- Aturan BARU untuk Goal Summary (2x2, Lebih Ringkas) --- */
+/* --- Aturan Final untuk Goal Summary (Layout 2x2) di Mobile --- */
+.goal-summary {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Membuat 2 kolom */
+    gap: 15px;
+}
+
+/* Aturan umum untuk semua kartu, termasuk Exercise */
+.goal-card {
+    padding: 15px;
+    /* Biarkan gaya defaultnya (latar belakang gelap, dll) */
+}
+
+/* Aturan KHUSUS untuk kartu 'Jatah Hari Ini' */
+.goal-summary .goal-card.remaining {
+    grid-column: auto; /* Pastikan hanya menempati 1 kolom */
+    grid-row: auto;
+    background-color: var(--success) !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+.goal-summary .goal-card.remaining * {
+    color: white !important;
+}
+.goal-summary .goal-card.remaining h2 {
+    font-size: 0.7rem;
+    margin-bottom: 4px;
+}
+.goal-summary .goal-card.remaining h1 { /* Kembalikan gaya untuk H1 */
+    font-size: 2.5rem;
+    margin: 0;
+}
+.goal-summary .goal-card.remaining p {
+    font-size: 0.65rem;
+    margin-top: 4px;
+}
+    /* Aturan untuk Activity & Water Intake */
+    .actions-and-water-container {
+        display: flex;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    .actions-and-water-container > .main-actions,
+    .actions-and-water-container > .water-tracker-section {
+        flex: 1;
+    }
+    .water-tracker-section {
+        display: flex;
         flex-direction: column;
+        text-align: center;
     }
-
-    /* Tombol activity tetap dalam grid 2 kolom di tablet */
-    .action-buttons {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
+    .main-actions h2,
+    .water-tracker-section h2 {
+        font-size: 1rem !important;
+        font-weight: 700;
+        margin: 0 0 10px 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .water-count { font-size: 1.8rem; }
+    .water-target { font-size: 0.75rem; }
+    .water-controls { margin-top: 10px; }
+    .water-btn { width: 35px; height: 35px; font-size: 1.4rem; }
+    .action-buttons { gap: 8px; }
+    .action-btn {
+        padding: 10px 15px;
+        min-height: auto;
         gap: 15px;
+        flex-direction: row;
+        align-items: center;
+        text-align: left;
     }
+    .action-btn .icon { font-size: 1.6rem; margin-bottom: 0; }
+    .action-btn div strong { font-size: 0.9em; margin-bottom: 2px; }
+    
+    /* Aturan untuk Halaman Weight Tracker */
+    /* ===================================================
+   GAYA FINAL UNTUK HALAMAN WEIGHT TRACKER (MOBILE)
+   =================================================== */
+
+    /* Atur layout utama & jarak antar kartu */
+    .weight-tracker-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    }
+
+/* Atur gaya judul di dalam setiap kartu */
+.weight-input-area h2,
+.chart-container h3,
+.weight-history-container h3 {
+  font-size: 1.1rem;
+  color: var(--primary);
+  margin-top: 0;
 }
 
+/* Atur form menjadi vertikal (atas-bawah) */
+/* GANTI SEMUA ATURAN LAMA UNTUK FORM BERAT DENGAN YANG INI */
+
+/* 1. Atur form menjadi sejajar (kiri-kanan) */
+.weight-form-inline {
+    display: flex;
+    gap: 10px; /* Jarak antara input dan tombol */
+}
+
+/* 2. KUNCI UTAMA: Buat input dan tombol berbagi ruang 50:50 */
+.weight-form-inline .form-group,
+.weight-form-inline .save-btn {
+    flex: 1; /* Membuat keduanya memiliki lebar yang sama */
+    margin: 0;
+}
+
+/* 3. Samakan tinggi dan gaya visual keduanya */
+.weight-form-inline input,
+.weight-form-inline .save-btn {
+    width: 100%;
+    height: 48px;
+    padding: 0 12px;
+    font-size: 1rem;
+    border-radius: 12px;
+    border-width: 2px;
+    border-style: solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 4. Atur gaya unik untuk input */
+.weight-form-inline input {
+    border-color: var(--input-border);
+    justify-content: flex-start; /* Teks input rata kiri */
+}
+
+/* 5. Atur gaya unik untuk tombol */
+.weight-form-inline .save-btn {
+    border-color: var(--primary);
+    background-color: var(--primary);
+    color: white;
+}
+    /* Perkecil judul "Today's History" */
+#dashboardSection #historyContainer h2 {
+    font-size: 0.9rem !important;      /* Perkecil dan paksa ukuran */
+    margin-bottom: 10px;
+}
+
+/* Gunakan selector yang lebih spesifik untuk item riwayat */
+#dashboardSection .history-item {
+    font-size: 0.75rem !important;     /* Perkecil dan paksa ukuran */
+    padding: 8px 12px;
+}
+/* 1. Sembunyikan kontainer chart */
+.chart-container {
+    display: none;
+}
+
+/* 2. Jadikan kontainer riwayat mengambil lebar penuh */
+.dashboard-grid {
+    grid-template-columns: 1fr; /* Ubah dari 2 kolom menjadi 1 kolom */
+}
+  /* Atur juga padding atas dari container utamanya */
+  .feature-page {
+    /* Anda bisa ubah ke 0 jika ingin sangat rapat */
+    padding-top: 5px; 
+  }
+}
+
+/* ATURAN KHUSUS UNTUK PONSEL (LAYAR SANGAT KECIL) */
 @media (max-width: 480px) {
-    /* Di layar ponsel, semua elemen menjadi 1 kolom */
-    .goal-summary, 
-    .action-buttons, 
-    .secondary-menu {
-        grid-template-columns: 1fr;
     }
-    .goal-card.remaining {
-        grid-column: auto;
-    }
-    .app-header { 
-        flex-direction: column; 
-        gap: 10px; 
-    }
-}
 
+/* Solusi final dengan !important untuk memaksa gaya diterapkan */
+h2 .title-highlight,
+h3 .title-highlight,
+strong .title-highlight {
+  /* Tambahkan !important untuk memenangkan "perang" CSS */
+  background-color: rgba(255, 107, 53, 0.15) !important; 
+  
+  /* Beri !important juga pada padding jika perlu */
+  padding: 2px 10px !important;
+  
+  border-radius: 7px;
+  letter-spacing: 0.5px;
+  color: var(--text, #E4E4E4);
+}
