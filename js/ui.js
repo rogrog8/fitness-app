@@ -101,59 +101,66 @@ class UI {
     closeModal(modal) { if(modal) modal.classList.add('hidden'); }
 
     renderUI(todayData, userProfile) {
-        const data = todayData || [];
-        let totalCaloriesIn = 0;
-        let totalCaloriesOut = 0;
-        const exerciseData = [];
+    // DIUBAH: Kita sekarang mengambil 'activities' dan 'water' dari objek todayData
+    const activities = (todayData && todayData.activities) || [];
+    const waterIntake = (todayData && todayData.water) || 0;
 
-        data.forEach(item => {
-            if (item.type === 'food') {
-                totalCaloriesIn += item.calories;
-            } else if (item.calories) {
-                totalCaloriesOut += item.calories;
-                exerciseData.push(item);
-            }
-        });
+    let totalCaloriesIn = 0;
+    let totalCaloriesOut = 0;
+    const exerciseData = [];
 
-        const waterIntake = todayData ? (todayData.water || 0) : 0;
-        this.renderWaterTracker(waterIntake, 8);
+    // TIDAK BERUBAH: Logika ini tetap sama, tapi sekarang menggunakan 'activities'
+    activities.forEach(item => {
+        if (item.type === 'food') {
+            totalCaloriesIn += item.calories;
+        } else if (item.calories) {
+            totalCaloriesOut += item.calories;
+            exerciseData.push(item);
+        }
+    });
 
-        const remaining = (userProfile.dailyGoal || 0) - totalCaloriesIn + totalCaloriesOut;
-        this.calorieGoalEl.textContent = Math.round(userProfile.dailyGoal || 0);
-        this.caloriesInEl.textContent = Math.round(totalCaloriesIn);
-        this.caloriesOutEl.textContent = Math.round(totalCaloriesOut);
+    // TIDAK BERUBAH: Logika ini sudah benar
+    this.renderWaterTracker(waterIntake, 8);
+
+    const remaining = (userProfile.dailyGoal || 0) - totalCaloriesIn + totalCaloriesOut;
+    this.calorieGoalEl.textContent = Math.round(userProfile.dailyGoal || 0);
+    this.caloriesInEl.textContent = Math.round(totalCaloriesIn);
+    this.caloriesOutEl.textContent = Math.round(totalCaloriesOut);
+    
+    this.remainingLabelEl.textContent = 'Calories Remaining';
+    this.caloriesRemainingEl.textContent = Math.round(remaining);
+    this.remainingSubtextEl.textContent = 'Exercise will increase your calorie allowance';
+    this.remainingSubtextEl.style.color = '#FFFFFF';
+
+    // DIUBAH: Kondisi sekarang memeriksa panjang 'activities'
+    if (activities.length > 0 || waterIntake > 0) {
+        this.dashboardSection.classList.remove('hidden');
         
-        this.remainingLabelEl.textContent = 'Jatah Hari Ini';
-        this.caloriesRemainingEl.textContent = Math.round(remaining);
-        this.remainingSubtextEl.textContent = 'Olahraga akan menambah jatah ini';
-        this.remainingSubtextEl.style.color = '#FFFFFF';
-
-        if (data.length > 0 || waterIntake > 0) {
-            this.dashboardSection.classList.remove('hidden');
-            
-            if (data.length > 0) {
-                this.clearAllBtn.classList.remove('hidden');
-                this.historyListEl.innerHTML = '';
-                data.sort((a, b) => b.id - a.id).forEach(item => this.renderHistoryItem(item));
-            } else {
-                this.clearAllBtn.classList.add('hidden');
-                this.historyListEl.innerHTML = '<p>No activities logged for today.</p>';
-            }
-            
-            const chartLabels = exerciseData.map(item => item.name);
-            const chartData = exerciseData.map(item => Math.round(item.calories));
-            if (exerciseData.length > 0) {
-                this.renderOrUpdateChart(chartLabels, chartData);
-            } else {
-                if (this.dailyChart) this.dailyChart.destroy();
-                this.chartLegendEl.innerHTML = '';
-            }
+        // DIUBAH: Kondisi sekarang memeriksa panjang 'activities'
+        if (activities.length > 0) {
+            this.clearAllBtn.classList.remove('hidden');
+            this.historyListEl.innerHTML = '';
+            // DIUBAH: Logika ini sekarang menggunakan 'activities'
+            activities.sort((a, b) => b.id - a.id).forEach(item => this.renderHistoryItem(item));
         } else {
-            this.dashboardSection.classList.add('hidden');
             this.clearAllBtn.classList.add('hidden');
             this.historyListEl.innerHTML = '<p>No activities logged for today.</p>';
         }
+        
+        const chartLabels = exerciseData.map(item => item.name);
+        const chartData = exerciseData.map(item => Math.round(item.calories));
+        if (exerciseData.length > 0) {
+            this.renderOrUpdateChart(chartLabels, chartData);
+        } else {
+            if (this.dailyChart) this.dailyChart.destroy();
+            this.chartLegendEl.innerHTML = '';
+        }
+    } else {
+        this.dashboardSection.classList.add('hidden');
+        this.clearAllBtn.classList.add('hidden');
+        this.historyListEl.innerHTML = '<p>No activities logged for today.</p>';
     }
+}
 
     renderHistoryItem(item) {
         const historyItem = document.createElement('div');

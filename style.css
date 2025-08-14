@@ -439,8 +439,22 @@ h3 { font-size: 1.1rem; margin-bottom: 15px; }
 .water-tracker { background-color: var(--card-bg); border-radius: 15px; padding: 20px; border: 1px solid var(--border); text-align: center; }
 .water-count { font-size: 2.5rem; font-weight: 700; color: var(--primary); }
 .water-target { font-size: 1rem; color: var(--text-light); }
-#water-lines-container { display: flex; justify-content: center; gap: 6px; height: 25px; margin-top: 10px; align-items: flex-end; }
-.water-line { width: 5px; height: 20px; border-radius: 3px; animation: line-appear 0.4s ease-out forwards; }
+#water-lines-container { 
+display: flex;
+justify-content: center;
+gap: 6px;
+height: 25px;
+margin-top: 10px;
+align-items: flex-end; 
+flex-wrap: wrap; /* <-- TAMBAHKAN BARIS INI */
+}
+.water-line { 
+    width: 5px; 
+    height: 15px; 
+    border-radius: 3px; 
+    animation: line-appear 0.4s ease-out forwards; 
+
+}
 .water-progress-bar { height: 10px; background-color: var(--light-gray); border-radius: 5px; margin: 15px 0; overflow: hidden; }
 .water-progress-fill { height: 100%; width: 0%; background-color: var(--primary); border-radius: 5px; transition: width 0.3s ease; }
 .water-controls { display: flex; justify-content: center; gap: 15px; }
@@ -898,6 +912,9 @@ input, select { width: 100%; padding: 12px; border: 2px solid var(--input-border
     /* Anda bisa ubah ke 0 jika ingin sangat rapat */
     padding-top: 5px; 
   }
+  #remainingSubtext {
+    text-align: left !important; /* Paksa teks ini untuk rata kiri */
+}
 }
 
 /* ATURAN KHUSUS UNTUK PONSEL (LAYAR SANGAT KECIL) */

@@ -195,41 +195,47 @@ class App {
     }
     }
     
-    updateWaterIntake(change) {
-        if (!this.fitnessDiary[this.today]) {
-            this.fitnessDiary[this.today] = [];
-        }
-        let currentWater = this.fitnessDiary[this.today].water || 0;
-        currentWater = Math.max(0, currentWater + change);
-        this.fitnessDiary[this.today].water = currentWater;
-        Storage.saveFitnessDiary(this.fitnessDiary);
-        this.ui.renderUI(this.fitnessDiary[this.today], this.userProfile);
+updateWaterIntake(change) {
+    // Jika data hari ini belum ada, buat struktur objek baru
+    if (!this.fitnessDiary[this.today]) {
+        this.fitnessDiary[this.today] = { activities: [], water: 0 };
     }
+    let currentWater = this.fitnessDiary[this.today].water || 0;
+    currentWater = Math.max(0, currentWater + change);
+    // Simpan jumlah air di properti 'water'
+    this.fitnessDiary[this.today].water = currentWater;
+    Storage.saveFitnessDiary(this.fitnessDiary);
+    this.ui.renderUI(this.fitnessDiary[this.today], this.userProfile);
+}
 
     logActivity(logObject) {
-        if (!this.fitnessDiary[this.today]) this.fitnessDiary[this.today] = [];
-        logObject.id = Date.now();
-        this.fitnessDiary[this.today].push(logObject);
-        Storage.saveFitnessDiary(this.fitnessDiary);
-        this.ui.renderUI(this.fitnessDiary[this.today], this.userProfile);
+    // Jika data hari ini belum ada, buat struktur objek baru
+    if (!this.fitnessDiary[this.today]) {
+        this.fitnessDiary[this.today] = { activities: [], water: 0 };
     }
-    deleteLog(idToDelete) {
-        if (!this.fitnessDiary[this.today]) return;
-        this.fitnessDiary[this.today] = this.fitnessDiary[this.today].filter(item => String(item.id) !== idToDelete);
-        Storage.saveFitnessDiary(this.fitnessDiary);
-        this.ui.renderUI(this.fitnessDiary[this.today], this.userProfile);
-    }
-    clearAllActivities() {
-        if (confirm('Are you sure you want to delete all activities?')) {
-            const currentWater = (this.fitnessDiary[this.today] && this.fitnessDiary[this.today].water) || 0;
-            this.fitnessDiary[this.today] = [];
-            if (currentWater > 0) {
-                this.fitnessDiary[this.today].water = currentWater;
-            }
+    logObject.id = Date.now();
+    // Masukkan aktivitas ke dalam array 'activities'
+    this.fitnessDiary[this.today].activities.push(logObject);
+    Storage.saveFitnessDiary(this.fitnessDiary);
+    this.ui.renderUI(this.fitnessDiary[this.today], this.userProfile);
+}
+deleteLog(idToDelete) {
+    if (!this.fitnessDiary[this.today]) return;
+    // Lakukan filter pada array 'activities'
+    this.fitnessDiary[this.today].activities = this.fitnessDiary[this.today].activities.filter(item => String(item.id) !== idToDelete);
+    Storage.saveFitnessDiary(this.fitnessDiary);
+    this.ui.renderUI(this.fitnessDiary[this.today], this.userProfile);
+}
+clearAllActivities() {
+    if (confirm('Are you sure you want to delete all activities?')) {
+        if (this.fitnessDiary[this.today]) {
+            // Hanya kosongkan array 'activities', biarkan data air tetap ada
+            this.fitnessDiary[this.today].activities = [];
             Storage.saveFitnessDiary(this.fitnessDiary);
-            this.ui.renderUI(this.fitnessDiary[this.today] || [], this.userProfile);
+            this.ui.renderUI(this.fitnessDiary[this.today], this.userProfile);
         }
     }
+}
     handleHistoryClick(e) {
         const deleteButton = e.target.closest('.delete-history-btn');
         if (deleteButton) {
