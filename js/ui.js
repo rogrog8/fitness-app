@@ -101,7 +101,8 @@ class UI {
     closeModal(modal) { if(modal) modal.classList.add('hidden'); }
 
     renderUI(todayData, userProfile) {
-    // DIUBAH: Kita sekarang mengambil 'activities' dan 'water' dari objek todayData
+    // Baris ini sudah diperbaiki untuk membaca format data yang baru
+    console.log('FUNGSI renderUI VERSI TERBARU TELAH DIMUAT PADA: ' + new Date()); // <-- TAMBAHKAN BARIS INI
     const activities = (todayData && todayData.activities) || [];
     const waterIntake = (todayData && todayData.water) || 0;
 
@@ -109,7 +110,7 @@ class UI {
     let totalCaloriesOut = 0;
     const exerciseData = [];
 
-    // TIDAK BERUBAH: Logika ini tetap sama, tapi sekarang menggunakan 'activities'
+    // Loop melalui 'activities' yang sudah pasti sebuah array
     activities.forEach(item => {
         if (item.type === 'food') {
             totalCaloriesIn += item.calories;
@@ -119,7 +120,6 @@ class UI {
         }
     });
 
-    // TIDAK BERUBAH: Logika ini sudah benar
     this.renderWaterTracker(waterIntake, 8);
 
     const remaining = (userProfile.dailyGoal || 0) - totalCaloriesIn + totalCaloriesOut;
@@ -130,17 +130,13 @@ class UI {
     this.remainingLabelEl.textContent = 'Calories Remaining';
     this.caloriesRemainingEl.textContent = Math.round(remaining);
     this.remainingSubtextEl.textContent = 'Exercise will increase your calorie allowance';
-    this.remainingSubtextEl.style.color = '#FFFFFF';
 
-    // DIUBAH: Kondisi sekarang memeriksa panjang 'activities'
     if (activities.length > 0 || waterIntake > 0) {
         this.dashboardSection.classList.remove('hidden');
         
-        // DIUBAH: Kondisi sekarang memeriksa panjang 'activities'
         if (activities.length > 0) {
             this.clearAllBtn.classList.remove('hidden');
             this.historyListEl.innerHTML = '';
-            // DIUBAH: Logika ini sekarang menggunakan 'activities'
             activities.sort((a, b) => b.id - a.id).forEach(item => this.renderHistoryItem(item));
         } else {
             this.clearAllBtn.classList.add('hidden');
