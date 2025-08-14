@@ -208,14 +208,18 @@ updateWaterIntake(change) {
     this.ui.renderUI(this.fitnessDiary[this.today], this.userProfile);
 }
 
-    logActivity(logObject) {
-    // Jika data hari ini belum ada, buat struktur objek baru
-    if (!this.fitnessDiary[this.today]) {
-        this.fitnessDiary[this.today] = { activities: [], water: 0 };
+logActivity(logObject) {
+    const todayEntry = this.fitnessDiary[this.today];
+
+    // PERBAIKAN: Cek jika data hari ini tidak ada ATAU formatnya salah (masih array)
+    if (!todayEntry || Array.isArray(todayEntry)) {
+        // Jika ya, buat struktur objek yang benar.
+        const oldWater = (Array.isArray(todayEntry) && todayEntry.water) ? todayEntry.water : 0;
+        this.fitnessDiary[this.today] = { activities: (Array.isArray(todayEntry) ? todayEntry : []), water: oldWater };
     }
+
     logObject.id = Date.now();
-    // Masukkan aktivitas ke dalam array 'activities'
-    this.fitnessDiary[this.today].activities.push(logObject);
+    this.fitnessDiary[this.today].activities.push(logObject); // Sekarang ini pasti aman
     Storage.saveFitnessDiary(this.fitnessDiary);
     this.ui.renderUI(this.fitnessDiary[this.today], this.userProfile);
 }
